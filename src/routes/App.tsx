@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import liff from "@line/liff";
-import "./App.css";
+import "./output.css"
 
 
 function App() {
