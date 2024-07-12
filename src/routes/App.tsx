@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import liff from "@line/liff";
-import "./output.css"
-
+import "./output.css";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -15,14 +14,13 @@ function App() {
       .then(() => {
         setMessage("LIFF init succeeded.");
       })
-      .catch((e: Error) => {
+      .catch((e) => {
         setMessage("LIFF init failed.");
-        setError(`${e}`);
+        setError(e.toString());
       });
-  });
+  }, []); // Add dependency array to run only once
 
   return (
-    
     <div className="App">
       <h1>create-liff-app</h1>
       {message && <p>{message}</p>}
