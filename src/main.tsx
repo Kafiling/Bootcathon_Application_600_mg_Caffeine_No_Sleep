@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./routes/App";
 import ServiceAtHome from "./routes/ServiceAtHome";
+import MobilLocations from "./routes/MobilLocations";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -16,6 +17,11 @@ const router = createBrowserRouter([
     path: "/at-home",
     element: <ServiceAtHome/>,
   },
+  {
+    path: "/locations",
+    element: <MobilLocations/>,
+  },
+
 ]);
 
 ReactDOM.render(

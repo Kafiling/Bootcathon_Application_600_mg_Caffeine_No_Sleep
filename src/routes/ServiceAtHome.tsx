@@ -45,6 +45,7 @@ function ServiceAtHome() {
     </nav>
 </header>
     <div className='bg-red-500'>Service-at-Home</div>
+    <div className='bg-red-500'>Service-at-Home</div>
     </>
   )
 }
