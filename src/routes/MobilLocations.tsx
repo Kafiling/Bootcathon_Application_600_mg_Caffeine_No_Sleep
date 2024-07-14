@@ -7,17 +7,6 @@ import mobillocations from "../location.json";
 
 
 function MobilLocations() { 
-
-    const pin = "https://maps.google.com/mapfiles/kml/paddle/grn-circle.png"
-
-
-    const markerStyle = {
-    position: "absolute",
-    top: "100%",
-    left: "100%",
-    transform: "translate(-50%, -100%)"
-    };
-
     setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY); // Your API key here.
     const navigate = useNavigate();
     function handleClick() {
@@ -145,7 +134,7 @@ function MobilLocations() {
                     {mobillocations.Locations.map(item => {
                         return (
                         <div lat={item.Latitude} lng={item.Longitude}>
-                            <img style={markerStyle} src={pin} alt="pin" />
+                            <img className='h-6' src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/location-pin.png" alt="pin" />
                         </div>
                         );
                     })}
