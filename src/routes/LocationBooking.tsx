@@ -7,15 +7,16 @@ const LocationBooking = (): JSX.Element => {
     const [searchValue, setSearchValue] = useState<string>('');
     const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
     const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+    const [circle, setCircle] = useState<google.maps.Circle | null>(null);
     const circleRef = useRef<google.maps.Circle | null>(null);
-    const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10); // Initial radius in kilometers
-    const googleMapsApiKey = "api";
-    const defaultLocation = { lat: 0, lng: 0 }; // Default to center of the world
+    const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10);
+    const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+    const googleMapsApiKey = "AIzaSyB3rsm9TScsm2rfxmBzx_JwfN73EU1CHxY";
+    const defaultLocation = { lat: 0, lng: 0 };
 
     useEffect(() => {
-        // Load Google Maps Places API script
         const googleScript = document.createElement('script');
-        googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
+        googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places,geometry`;
         googleScript.async = true;
         googleScript.onload = initMap;
         document.body.appendChild(googleScript);
@@ -27,12 +28,11 @@ const LocationBooking = (): JSX.Element => {
 
     useEffect(() => {
         if (map && selectedPlace) {
-            updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), circleRadiusKm * 1000); // Convert km to meters
+            updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), circleRadiusKm * 1000);
         }
     }, [selectedPlace, circleRadiusKm]);
 
     const initMap = () => {
-        // Initialize the map
         const mapElement = document.getElementById('google-map');
         if (mapElement) {
             const mapOptions: google.maps.MapOptions = {
@@ -41,21 +41,18 @@ const LocationBooking = (): JSX.Element => {
             };
             const newMap = new window.google.maps.Map(mapElement, mapOptions);
             setMap(newMap);
-    
-            // Fetch and set current location as default
+
             fetchCurrentLocation(newMap);
-    
-            // Add click event listener to set selected place
+
             newMap.addListener("click", (event) => {
                 const clickedLocation = {
                     lat: event.latLng.lat(),
                     lng: event.latLng.lng()
                 };
                 setSelectedPlace(clickedLocation);
-                updateCircle(new window.google.maps.LatLng(clickedLocation.lat, clickedLocation.lng), circleRadiusKm * 1000); // Convert km to meters
+                updateCircle(new window.google.maps.LatLng(clickedLocation.lat, clickedLocation.lng), circleRadiusKm * 1000);
             });
-    
-            // Initialize marker for selected place
+
             const initialMarker = new window.google.maps.Marker({
                 position: defaultLocation,
                 map: newMap,
@@ -68,25 +65,7 @@ const LocationBooking = (): JSX.Element => {
                 }
             });
             setMarker(initialMarker);
-    
-            // Add markers for each location in locationsData
-            if (Array.isArray(locationsData.Locations)) {
-                locationsData.Locations.forEach((location) => {
-                    new window.google.maps.Marker({
-                        position: { lat: location.Latitude, lng: location.Longitude },
-                        map: newMap,
-                        title: location.LocationName,
-                        icon: {
-                            url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Red pointer icon
-                            scaledSize: new window.google.maps.Size(32, 32),
-                            origin: new window.google.maps.Point(0, 0),
-                            anchor: new window.google.maps.Point(16, 32)
-                        }
-                    });
-                });
-            }
-    
-            // Initialize circle for current location
+
             const initialCircle = new google.maps.Circle({
                 strokeColor: "#4285F4",
                 strokeOpacity: 0.8,
@@ -95,16 +74,37 @@ const LocationBooking = (): JSX.Element => {
                 fillOpacity: 0.35,
                 map: newMap,
                 center: defaultLocation,
-                radius: circleRadiusKm * 1000 // Convert km to meters
+                radius: circleRadiusKm * 1000
             });
+            setCircle(initialCircle);
             circleRef.current = initialCircle;
-    
-            // Update marker position to center of the circle
+
             initialMarker.setPosition(defaultLocation);
+
+            addMarkersInCircle(newMap, defaultLocation, circleRadiusKm);
+
+            // Initialize Autocomplete
+            const autocompleteInput = document.getElementById('autocomplete-input') as HTMLInputElement;
+            const newAutocomplete = new window.google.maps.places.Autocomplete(autocompleteInput);
+            setAutocomplete(newAutocomplete);
+
+            newAutocomplete.addListener('place_changed', () => {
+                const place = newAutocomplete.getPlace();
+                if (!place.geometry) {
+                    console.error('Place selection failed or no geometry available.');
+                    return;
+                }
+                const selectedLocation = {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                };
+                setSelectedPlace(selectedLocation);
+                setSearchValue(place.formatted_address || '');
+                newMap.setCenter(selectedLocation);
+                updateCircle(new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng), circleRadiusKm * 1000);
+            });
         }
     };
-    
-    
 
     const fetchCurrentLocation = (map: google.maps.Map) => {
         if (navigator.geolocation) {
@@ -115,7 +115,7 @@ const LocationBooking = (): JSX.Element => {
                 };
                 setSelectedPlace(currentLocation);
                 map.setCenter(currentLocation);
-                map.setZoom(15); // Example zoom level
+                map.setZoom(15);
             }, () => {
                 console.error("Error in fetching current location.");
             });
@@ -128,20 +128,6 @@ const LocationBooking = (): JSX.Element => {
         setSearchValue(event.target.value);
     };
 
-    const handlePlaceSelect = () => {
-        if (autocomplete) {
-            const place = autocomplete.getPlace();
-            if (place.geometry) {
-                const selectedLocation = {
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng()
-                };
-                setSelectedPlace(selectedLocation);
-                setSearchValue(place.formatted_address); // Set input value to selected place address
-            }
-        }
-    };
-
     const handleSearch = () => {
         const geocoder = new window.google.maps.Geocoder();
         geocoder.geocode({ address: searchValue }, (results, status) => {
@@ -151,6 +137,7 @@ const LocationBooking = (): JSX.Element => {
                     lng: results[0].geometry.location.lng()
                 };
                 setSelectedPlace(selectedLocation);
+                updateCircle(new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng), circleRadiusKm * 1000);
             } else {
                 console.error('Geocode was not successful for the following reason:', status);
             }
@@ -161,30 +148,73 @@ const LocationBooking = (): JSX.Element => {
         if (!map) return;
 
         if (!circleRef.current) {
-            // Create new circle if it doesn't exist
             const circleOptions: google.maps.CircleOptions = {
-                strokeColor: '#007BFF',
+                strokeColor: '#4285F4',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: '#007BFF',
+                fillColor: '#4285F4',
                 fillOpacity: 0.35,
                 map: map,
                 center: center,
-                radius: radius, // Radius in meters
+                radius: radius,
             };
 
             const newCircle = new google.maps.Circle(circleOptions);
+            setCircle(newCircle);
             circleRef.current = newCircle;
         } else {
-            // Update existing circle
             circleRef.current.setCenter(center);
             circleRef.current.setRadius(radius);
         }
 
-        // Update marker position to center of the circle
         if (marker) {
-            marker.setPosition(center.toJSON()); // Center marker on the circle
+            marker.setPosition(center.toJSON());
         }
+
+        addMarkersInCircle(map, center.toJSON(), radius / 1000);
+    };
+
+    const addMarkersInCircle = (map: google.maps.Map, center: google.maps.LatLngLiteral, radiusKm: number) => {
+        const newMarkers: google.maps.Marker[] = [];
+
+        locationsData.Locations.forEach((location) => {
+            const markerLatLng = new window.google.maps.LatLng(location.Latitude, location.Longitude);
+            const isInCircle = isMarkerInCircle(location, center, radiusKm);
+
+            let marker = markers.find(m => m.getPosition()?.equals(markerLatLng));
+
+            if (isInCircle) {
+                if (!marker) {
+                    marker = new window.google.maps.Marker({
+                        position: markerLatLng,
+                        map: map,
+                        title: location.LocationName,
+                        icon: {
+                            url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                            scaledSize: new window.google.maps.Size(32, 32),
+                            origin: new window.google.maps.Point(0, 0),
+                            anchor: new window.google.maps.Point(16, 32)
+                        }
+                    });
+                } else {
+                    marker.setMap(map);
+                }
+                newMarkers.push(marker);
+            } else {
+                if (marker) {
+                    marker.setMap(null);
+                }
+            }
+        });
+
+        setMarkers(newMarkers);
+    };
+
+    const isMarkerInCircle = (location: any, center: google.maps.LatLngLiteral, radiusKm: number) => {
+        const markerLatLng = new window.google.maps.LatLng(location.Latitude, location.Longitude);
+        const circleCenter = new window.google.maps.LatLng(center.lat, center.lng);
+        const distance = window.google.maps.geometry.spherical.computeDistanceBetween(markerLatLng, circleCenter);
+        return distance <= radiusKm * 1000;
     };
 
     const handleRadiusInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,7 +222,7 @@ const LocationBooking = (): JSX.Element => {
         if (!isNaN(value)) {
             setCircleRadiusKm(value);
             if (selectedPlace) {
-                updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), value * 1000); // Convert km to meters
+                updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), value * 1000);
             }
         }
     };
@@ -222,7 +252,7 @@ const LocationBooking = (): JSX.Element => {
                     style={{
                         padding: '10px',
                         fontSize: '16px',
-                        width: '80%',
+                        width: '70%',
                         maxWidth: '400px',
                         border: '1px solid #ccc',
                         borderRadius: '5px',
@@ -262,6 +292,27 @@ const LocationBooking = (): JSX.Element => {
                         borderRadius: '5px'
                     }}
                 />
+            </div>
+            <div>
+                {locationsData.Locations.map((location) => (
+                    <div key={location.LocationID} style={{
+                        border: '1px solid #ccc',
+                        borderRadius: '5px',
+                        padding: '10px',
+                        margin: '10px 0',
+                        maxWidth: '400px',
+                        textAlign: 'left',
+                        backgroundColor: '#f9f9f9'
+                    }}>
+                        <h3>{location.LocationName}</h3>
+                        <p>{location.AddressLine1}, {location.AddressLine2}</p>
+                        <p>{location.City}, {location.StateProvince} {location.PostalCode}</p>
+                        <p>Telephone: {location.Telephone}</p>
+                        <p>Weekly Operating Days: {location.WeeklyOperatingDays}</p>
+                        <p>Weekly Operating Hours: {location.WeeklyOperatingHours}</p>
+                        <p>Store Amenities: {location.StoreAmenities.join(', ')}</p>
+                    </div>
+                ))}
             </div>
         </div>
     );
