@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./routes/App";
 import ServiceAtHome from "./routes/ServiceAtHome";
 import MobilLocations from "./routes/MobilLocations";
+import FindNearest from "./routes/FindNearest";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "/locations",
     element: <MobilLocations/>,
+  },
+  {
+    path: "/findnearest",
+    element: <FindNearest/>,
   },
 
 ]);
