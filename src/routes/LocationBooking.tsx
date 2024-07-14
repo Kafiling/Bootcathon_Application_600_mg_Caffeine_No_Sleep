@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import locationsData from "./location.json"; // Import locations.json
 
 const LocationBooking = (): JSX.Element => {
@@ -6,7 +6,10 @@ const LocationBooking = (): JSX.Element => {
     const [selectedPlace, setSelectedPlace] = useState<{ lat: number, lng: number } | null>(null);
     const [searchValue, setSearchValue] = useState<string>('');
     const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
-    const googleMapsApiKey = "api_key"; // Replace with your actual API key
+    const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+    const circleRef = useRef<google.maps.Circle | null>(null);
+    const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10); // Initial radius in kilometers
+    const googleMapsApiKey = "api";
     const defaultLocation = { lat: 0, lng: 0 }; // Default to center of the world
 
     useEffect(() => {
@@ -21,6 +24,12 @@ const LocationBooking = (): JSX.Element => {
             document.body.removeChild(googleScript);
         };
     }, [googleMapsApiKey]);
+
+    useEffect(() => {
+        if (map && selectedPlace) {
+            updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), circleRadiusKm * 1000); // Convert km to meters
+        }
+    }, [selectedPlace, circleRadiusKm]);
 
     const initMap = () => {
         // Initialize the map
@@ -47,7 +56,7 @@ const LocationBooking = (): JSX.Element => {
             // Add markers for each location in locationsData
             if (Array.isArray(locationsData.Locations)) {
                 locationsData.Locations.forEach((location) => {
-                    const marker = new window.google.maps.Marker({
+                    new window.google.maps.Marker({
                         position: { lat: location.Latitude, lng: location.Longitude },
                         map: newMap,
                         title: location.LocationName,
@@ -60,6 +69,31 @@ const LocationBooking = (): JSX.Element => {
                     });
                 });
             }
+
+            // Initialize marker for selected place
+            const initialMarker = new window.google.maps.Marker({
+                position: defaultLocation,
+                map: newMap,
+                title: 'Selected Location',
+                icon: {
+                    url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                    scaledSize: new window.google.maps.Size(32, 32),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(16, 32)
+                }
+            });
+            setMarker(initialMarker);
+
+            // Add click event listener to set selected place
+            newMap.addListener("click", (event) => {
+                const clickedLocation = {
+                    lat: event.latLng.lat(),
+                    lng: event.latLng.lng()
+                };
+                setSelectedPlace(clickedLocation);
+                initialMarker.setPosition(clickedLocation);
+                initialMarker.setTitle('Selected Location');
+            });
         }
     };
 
@@ -73,18 +107,6 @@ const LocationBooking = (): JSX.Element => {
                 setSelectedPlace(currentLocation);
                 map.setCenter(currentLocation);
                 map.setZoom(15); // Example zoom level
-                // Add marker for current location
-                const marker = new window.google.maps.Marker({
-                    position: currentLocation,
-                    map: map,
-                    title: 'Your Location',
-                    icon: {
-                        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                        scaledSize: new window.google.maps.Size(32, 32),
-                        origin: new window.google.maps.Point(0, 0),
-                        anchor: new window.google.maps.Point(16, 32)
-                    }
-                });
             }, () => {
                 console.error("Error in fetching current location.");
             });
@@ -107,22 +129,6 @@ const LocationBooking = (): JSX.Element => {
                 };
                 setSelectedPlace(selectedLocation);
                 setSearchValue(place.formatted_address); // Set input value to selected place address
-                if (map) {
-                    map.setCenter(selectedLocation);
-                    map.setZoom(15); // Example zoom level
-                    // Add marker for selected place
-                    const marker = new window.google.maps.Marker({
-                        position: selectedLocation,
-                        map: map,
-                        title: place.name,
-                        icon: {
-                            url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                            scaledSize: new window.google.maps.Size(32, 32),
-                            origin: new window.google.maps.Point(0, 0),
-                            anchor: new window.google.maps.Point(16, 32)
-                        }
-                    });
-                }
             }
         }
     };
@@ -136,35 +142,51 @@ const LocationBooking = (): JSX.Element => {
                     lng: results[0].geometry.location.lng()
                 };
                 setSelectedPlace(selectedLocation);
-                if (map) {
-                    map.setCenter(selectedLocation);
-                    map.setZoom(15); // Example zoom level
-                    // Add marker for selected place
-                    const marker = new window.google.maps.Marker({
-                        position: selectedLocation,
-                        map: map,
-                        title: results[0].formatted_address,
-                        icon: {
-                            url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                            scaledSize: new window.google.maps.Size(32, 32),
-                            origin: new window.google.maps.Point(0, 0),
-                            anchor: new window.google.maps.Point(16, 32)
-                        }
-                    });
-                }
             } else {
                 console.error('Geocode was not successful for the following reason:', status);
             }
         });
     };
 
-    useEffect(() => {
-        // Update map location when selectedPlace changes
-        if (map && selectedPlace) {
-            map.setCenter(selectedPlace);
-            map.setZoom(15); // Example zoom level
+    const updateCircle = (center: google.maps.LatLng, radius: number) => {
+        if (!map) return;
+
+        if (!circleRef.current) {
+            // Create new circle if it doesn't exist
+            const circleOptions: google.maps.CircleOptions = {
+                strokeColor: '#007BFF',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#007BFF',
+                fillOpacity: 0.35,
+                map: map,
+                center: center,
+                radius: radius, // Radius in meters
+            };
+
+            const newCircle = new google.maps.Circle(circleOptions);
+            circleRef.current = newCircle;
+        } else {
+            // Update existing circle
+            circleRef.current.setCenter(center);
+            circleRef.current.setRadius(radius);
         }
-    }, [map, selectedPlace]);
+
+        // Update marker position to center of the circle
+        if (marker) {
+            marker.setPosition(center.toJSON()); // Center marker on the circle
+        }
+    };
+
+    const handleRadiusInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseFloat(event.target.value);
+        if (!isNaN(value)) {
+            setCircleRadiusKm(value);
+            if (selectedPlace) {
+                updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), value * 1000); // Convert km to meters
+            }
+        }
+    };
 
     return (
         <div>
@@ -213,6 +235,24 @@ const LocationBooking = (): JSX.Element => {
                 >
                     Search
                 </button>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <label htmlFor="radius-input" style={{ marginRight: '10px' }}>Circle Radius (km):</label>
+                <input
+                    id="radius-input"
+                    type="number"
+                    value={circleRadiusKm}
+                    onChange={handleRadiusInputChange}
+                    min="1"
+                    step="1"
+                    style={{
+                        padding: '10px',
+                        fontSize: '16px',
+                        width: '80px',
+                        border: '1px solid #ccc',
+                        borderRadius: '5px'
+                    }}
+                />
             </div>
         </div>
     );
