@@ -5,9 +5,22 @@ export const CarCare = (): JSX.Element => {
     const blueImage = "https://cdn.discordapp.com/attachments/1257716666293555201/1261645363496878130/bluebmw.png?ex=6693b64e&is=669264ce&hm=99940e014607e508247afced9b0914322615a03842dfb0842716868ad776ac5e&";
 
     const [currentImage, setCurrentImage] = useState(blueImage);
+    const [selected, setSelected] = useState({
+        oilChange: false,
+        brakeCheck: false,
+        tireCheck: false,
+        engineCheck: false,
+    });
 
-    const BookingtoggleImage = () => {
+    const toggleImage = () => {
         setCurrentImage(currentImage === blueImage ? redImage : blueImage);
+    };
+
+    const toggleSelection = (service : any) => {
+        setSelected((prevSelected) => ({
+            ...prevSelected,
+            [service]: !prevSelected[service],
+        }));
     };
 
     return (
@@ -40,7 +53,11 @@ export const CarCare = (): JSX.Element => {
                             <div className="absolute w-full h-[550px] top-0 left-0 bg-white" />
                             <div className="absolute w-[90%] max-w-[379px] h-[587px] top-[0px] left-1/2 transform -translate-x-1/2">
                                 <div className="absolute w-full h-[368px] top-4 left-0 grid grid-cols-2 gap-4">
-                                    <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
+                                    <div
+                                        className={`w-full h-[177px] rounded-[10px] shadow-md relative ${selected.oilChange ? 'bg-[#CCD1D1]' : 'bg-neutral-50'}`}
+                                        onClick={() => toggleSelection("oilChange")}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <img
                                             className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
                                             alt="oilchange"
@@ -50,7 +67,11 @@ export const CarCare = (): JSX.Element => {
                                             การบำรุงรักษาทั่วไป
                                         </div>
                                     </div>
-                                    <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
+                                    <div
+                                        className={`w-full h-[177px] rounded-[10px] shadow-md relative ${selected.brakeCheck ? 'bg-[#CCD1D1]' : 'bg-neutral-50'}`}
+                                        onClick={() => toggleSelection("brakeCheck")}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <img
                                             className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
                                             alt="breakcheck"
@@ -60,7 +81,11 @@ export const CarCare = (): JSX.Element => {
                                             การตรวจเช็คระบบเบรก
                                         </div>
                                     </div>
-                                    <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
+                                    <div
+                                        className={`w-full h-[177px] rounded-[10px] shadow-md relative ${selected.tireCheck ? 'bg-[#CCD1D1]' : 'bg-neutral-50'}`}
+                                        onClick={() => toggleSelection("tireCheck")}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <img
                                             className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
                                             alt="tirecheck"
@@ -70,7 +95,11 @@ export const CarCare = (): JSX.Element => {
                                             การตรวจเช็คยางรถยนต์
                                         </div>
                                     </div>
-                                    <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
+                                    <div
+                                        className={`w-full h-[177px] rounded-[10px] shadow-md relative ${selected.engineCheck ? 'bg-[#CCD1D1]' : 'bg-neutral-50'}`}
+                                        onClick={() => toggleSelection("engineCheck")}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <img
                                             className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
                                             alt="enginecheck"
@@ -85,14 +114,14 @@ export const CarCare = (): JSX.Element => {
                                     className="absolute top-[460px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[270px] h-[13%] object-cover rounded-[10px]"
                                     alt="Appointments"
                                     src={currentImage}
-                                    onClick={BookingtoggleImage}
+                                    onClick={toggleImage}
                                     style={{ cursor: 'pointer' }}
                                 />
                                 <div className="text-red tracking-[0] top-[505px] leading-[normal] text-center text-xs absolute bottom-1.5 left-0 right-0">
                                     โปรดเลือกบริการเพื่อจอง
                                 </div>
                             </div>
-                            <div className="absolute w-full h-1.5 bottom-36 left-0 bg-[#F1F1F1]" />
+                            <div className="absolute w-full h-1.5 top-[402px] left-0 bg-[#F1F1F1]" />
                         </div>
                     </div>
                 </div>
