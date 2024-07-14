@@ -11,7 +11,7 @@ const LocationBooking = (): JSX.Element => {
     const circleRef = useRef<google.maps.Circle | null>(null);
     const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10);
     const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
-    const googleMapsApiKey = "AIzaSyB3rsm9TScsm2rfxmBzx_JwfN73EU1CHxY";
+    const googleMapsApiKey = "api-key"; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
     useEffect(() => {
