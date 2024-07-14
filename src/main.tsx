@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./routes/App";
 import ServiceAtHome from "./routes/ServiceAtHome";
-import CarCare from "./routes/CarCare";
+import BookingService from "./routes/BookingService";
+import LocationBooking from "./routes/LocationBooking";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -18,9 +19,13 @@ const router = createBrowserRouter([
     element: <ServiceAtHome/>,
   },
   {
-    path: "/car-care",
-    element: <CarCare/>,
-  }
+    path: "/Booking-service",
+    element: <BookingService/>,
+  },
+  {
+    path: "/Booking-service/Location-Booking",
+    element: <LocationBooking/>,
+  },
 ]);
 
 ReactDOM.render(

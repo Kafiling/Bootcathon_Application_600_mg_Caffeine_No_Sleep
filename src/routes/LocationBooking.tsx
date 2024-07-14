@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import locationsData from "./location.json"; // Import locations.json
 
 const LocationBooking = (): JSX.Element => {
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [selectedPlace, setSelectedPlace] = useState<{ lat: number, lng: number } | null>(null);
     const [searchValue, setSearchValue] = useState<string>('');
     const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
-    const googleMapsApiKey = "AIzaSyAcuB1_uyq5xydxn2janKo-pwpci7yT8dI"; // Your Google Maps API key
+    const googleMapsApiKey = "api_key"; // Replace with your actual API key
     const defaultLocation = { lat: 0, lng: 0 }; // Default to center of the world
 
     useEffect(() => {
@@ -42,6 +43,23 @@ const LocationBooking = (): JSX.Element => {
 
             // Fetch and set current location as default
             fetchCurrentLocation(newMap);
+
+            // Add markers for each location in locationsData
+            if (Array.isArray(locationsData.Locations)) {
+                locationsData.Locations.forEach((location) => {
+                    const marker = new window.google.maps.Marker({
+                        position: { lat: location.Latitude, lng: location.Longitude },
+                        map: newMap,
+                        title: location.LocationName,
+                        icon: {
+                            url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Red pointer icon
+                            scaledSize: new window.google.maps.Size(32, 32),
+                            origin: new window.google.maps.Point(0, 0),
+                            anchor: new window.google.maps.Point(16, 32)
+                        }
+                    });
+                });
+            }
         }
     };
 
