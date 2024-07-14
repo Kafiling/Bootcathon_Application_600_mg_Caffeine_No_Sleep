@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import liff from "@line/liff";
 import "./output.css"
-
+import {APIProvider} from '@vis.gl/react-google-maps';
 
 function App() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  
+  
   useEffect(() => {
     liff
       .init({
         liffId: import.meta.env.VITE_LIFF_ID
-      })
+      })  
       .then(() => {
         setMessage("LIFF init succeeded.");
       })
