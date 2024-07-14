@@ -1,33 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 
 export const CarCare = (): JSX.Element => {
+    const redImage = "https://cdn.discordapp.com/attachments/1257716666293555201/1261645363157401649/redbmw.png?ex=6693b64e&is=669264ce&hm=0d530e2cdcb995b0c5e7e0ce50233efe2c067876238c2ac8c2ecad174c452c4f&";
+    const blueImage = "https://cdn.discordapp.com/attachments/1257716666293555201/1261645363496878130/bluebmw.png?ex=6693b64e&is=669264ce&hm=99940e014607e508247afced9b0914322615a03842dfb0842716868ad776ac5e&";
+
+    const [currentImage, setCurrentImage] = useState(blueImage);
+
+    const BookingtoggleImage = () => {
+        setCurrentImage(currentImage === blueImage ? redImage : blueImage);
+    };
+
     return (
         <div className="bg-white flex flex-col items-center w-full min-h-screen">
             <div className="w-full max-w-md h-auto">
                 <div className="relative w-full h-full">
-                    <div className="absolute w-full h-full top-0 left-0">
-                        <div className="absolute w-full h-12 top-0 left-0 bg-[#d9d9d9]" />
-                        <div className="absolute w-full h-[95px] top-[calc(100vh-95px)] left-0 bg-[#161616]">
-                            <img className="absolute w-[153px] h-[5px] top-20 left-[50%] transform -translate-x-1/2" alt="Line" src="line-3.svg" />
+                    <header className="w-full h-[62px] top-[116px] left-0 bg-transparent">
+                        <div className="relative w-full h-[62px] bg-[#004894] flex items-center justify-between px-4">
+                            <div className="flex items-center">
+                                <img className="w-[50px] h-[50px]" alt="Logo" src="https://cdn.discordapp.com/attachments/1261221921597423626/1261240782460031066/logo-placeholder-image.png?ex=6692e643&is=669194c3&hm=445c43b722103af3af7007011f8eab1486db7d5475016d434c660949324b637d&" />
+                                <div className="font-bold text-white text-[28px] tracking-[0] leading-[normal] px-4">
+                                    CAR CARE
+                                </div>
+                            </div>
+                            <div className="w-[57px] h-[57px] bg-white rounded-full border-[3px] border-solid border-[#11315e] flex items-center justify-center">
+                                <img className="w-[35px] h-[47px]" alt="Account" src="https://cdn.discordapp.com/attachments/1261221921597423626/1261594294075265166/Account.png?ex=669386be&is=6692353e&hm=9a2f3719a52ed91c3e0e9558efe4285a434a1fcafaff1038cd06c0839575fb2a&" />
+                            </div>
                         </div>
-                        <div className="absolute w-full h-12 top-[58px] left-0 bg-[#e6e6e6]" />
+                    </header>
+                    <div className="absolute w-full h-full top-0 left-0">
                         <div className="absolute w-full h-[calc(100vh-183px)] top-[116px] left-0 bg-[#f1f1f1]" />
                     </div>
-                    <div className="absolute w-full h-[635px] top-48 left-0">
+                    <div className="absolute w-full h-[635px] top-18 left-0">
                         <div className="absolute w-full h-12 top-0 left-0 bg-[#2e60a7]">
-                            <div className="w-[301px] top-[7px] left-[17px] text-white text-[28px] absolute font-bold tracking-[0] leading-[normal]">
+                            <div className="w-[301px] top-[3px] left-[17px] text-white text-[28px] absolute font-bold tracking-[0] leading-[normal] ">
                                 คุณต้องการใช้บริการไหน
                             </div>
                         </div>
-                        <div className="absolute w-full h-[587px] top-12 left-0">
-                            <div className="absolute w-full h-[587px] top-0 left-0 bg-white" />
-                            <div className="absolute w-[90%] max-w-[379px] h-[544px] top-[19px] left-1/2 transform -translate-x-1/2">
-                                <div className="absolute w-full h-[368px] top-44 left-0 grid grid-cols-2 gap-4">
+                        <div className="absolute w-full h-[550px] top-12 left-0">
+                            <div className="absolute w-full h-[550px] top-0 left-0 bg-white" />
+                            <div className="absolute w-[90%] max-w-[379px] h-[587px] top-[0px] left-1/2 transform -translate-x-1/2">
+                                <div className="absolute w-full h-[368px] top-4 left-0 grid grid-cols-2 gap-4">
                                     <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
                                         <img
-                                            className="w-full h-full object-cover absolute top-0 left-0"
-                                            alt="Image"
-                                            src="image-47.png"
+                                            className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
+                                            alt="oilchange"
+                                            src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/oilchange.png"
                                         />
                                         <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
                                             การบำรุงรักษาทั่วไป
@@ -35,85 +52,49 @@ export const CarCare = (): JSX.Element => {
                                     </div>
                                     <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
                                         <img
-                                            className="w-full h-full object-cover absolute top-0 left-0"
-                                            alt="Image"
-                                            src="image-48.png"
+                                            className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
+                                            alt="breakcheck"
+                                            src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/breakcheck.png"
                                         />
                                         <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
-                                            การบำรุงรักษาทั่วไป
+                                            การตรวจเช็คระบบเบรก
                                         </div>
                                     </div>
                                     <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
                                         <img
-                                            className="w-full h-full object-cover absolute top-0 left-0"
-                                            alt="Image"
-                                            src="image-49.png"
+                                            className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
+                                            alt="tirecheck"
+                                            src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/tirecheck.png"
                                         />
                                         <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
-                                            การบำรุงรักษาทั่วไป
+                                            การตรวจเช็คยางรถยนต์
                                         </div>
                                     </div>
                                     <div className="w-full h-[177px] bg-neutral-50 rounded-[10px] shadow-md relative">
                                         <img
-                                            className="w-full h-full object-cover absolute top-0 left-0"
-                                            alt="Image"
-                                            src="image-50.png"
+                                            className="w-[80%] h-[135px] object-cover mx-auto rounded-[10px] mt-3"
+                                            alt="enginecheck"
+                                            src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/enginecheck.png"
                                         />
                                         <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
-                                            การบำรุงรักษาทั่วไป
+                                            การบำรุงรักษาเครื่องยนต์
                                         </div>
                                     </div>
                                 </div>
                                 <img
-                                    className="absolute w-[386px] h-[140px] -top-0.5 left-1/2 transform -translate-x-1/2 object-cover"
-                                    alt="Emergency syria"
-                                    src="emergency-syria-t-rkiye-appeal-1.png"
+                                    className="absolute top-[460px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[270px] h-[13%] object-cover rounded-[10px]"
+                                    alt="Appointments"
+                                    src={currentImage}
+                                    onClick={BookingtoggleImage}
+                                    style={{ cursor: 'pointer' }}
                                 />
+                                <div className="text-red tracking-[0] top-[505px] leading-[normal] text-center text-xs absolute bottom-1.5 left-0 right-0">
+                                    โปรดเลือกบริการเพื่อจอง
+                                </div>
                             </div>
-                            <div className="absolute w-full top-[209px] left-0 grid grid-cols-2 gap-4 px-4">
-                                <img
-                                    className="w-full h-[135px] object-cover"
-                                    alt="Image"
-                                    src="image-47.png"
-                                />
-                                <img
-                                    className="w-full h-[135px] object-cover"
-                                    alt="Image"
-                                    src="image-48.png"
-                                />
-                                <img
-                                    className="w-full h-[135px] object-cover"
-                                    alt="Image"
-                                    src="image.png"
-                                />
-                                <img
-                                    className="w-full h-[135px] object-cover"
-                                    alt="Image"
-                                    src="image-49.png"
-                                />
-                            </div>
-                            <div className="absolute w-full h-1.5 top-[163px] left-0 bg-[#F1F1F1]" />
+                            <div className="absolute w-full h-1.5 bottom-36 left-0 bg-[#F1F1F1]" />
                         </div>
                     </div>
-                    <header className="absolute w-full h-[62px] top-[116px] left-0 bg-transparent">
-                        <div className="relative w-full h-[62px] bg-[#004894] flex items-center justify-between px-4">
-                            <img className="w-[83px] h-[45px]" alt="Image" src="image-9.png" />
-                            <div className="font-bold text-white text-[28px] tracking-[0] leading-[normal]">
-                                CAR CARE
-                            </div>
-                            <div className="w-[57px] h-[57px] bg-white rounded-full border-[3px] border-solid border-[#11315e] flex items-center justify-center">
-                                <img className="w-[35px] h-[47px]" alt="Account" src="account.png" />
-                            </div>
-                        </div>
-                    </header>
-                    <div className="absolute w-full h-6 top-[70px] left-0 flex items-center justify-between px-4">
-                        <img className="w-6 h-6 object-cover" alt="Back" src="back-1.png" />
-                        <div className="font-normal text-black text-base tracking-[0] leading-[normal]">
-                            Exxon-Mobil-AtHome.com
-                        </div>
-                        <img className="w-5 h-5 object-cover" alt="Close" src="close-1.png" />
-                    </div>
-                    <img className="absolute w-full h-12 top-0 left-0" alt="Head" src="head.png" />
                 </div>
             </div>
         </div>
@@ -121,4 +102,3 @@ export const CarCare = (): JSX.Element => {
 };
 
 export default CarCare;
-
