@@ -3,9 +3,21 @@ import GoogleMapReact from 'google-map-react';
 import { useNavigate } from "react-router-dom";
 import "./output.css"
 import {setDefaults,fromLatLng,setKey,geocode,RequestType} from "react-geocode";
+import mobillocations from "../location.json";
 
 
 function MobilLocations() { 
+
+    const pin = "https://maps.google.com/mapfiles/kml/paddle/grn-circle.png"
+
+
+    const markerStyle = {
+    position: "absolute",
+    top: "100%",
+    left: "100%",
+    transform: "translate(-50%, -100%)"
+    };
+
     setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY); // Your API key here.
     const navigate = useNavigate();
     function handleClick() {
@@ -96,6 +108,7 @@ function MobilLocations() {
           setUserLocation({ latitude: lat, longitude: lag });
           
         }, 2000);
+        console.log(mobillocations.Locations[0].Latitude);
       };
       
       
@@ -129,11 +142,16 @@ function MobilLocations() {
                     defaultZoom={defaultProps.zoom}
                     onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
                 >
-        
+                    {mobillocations.Locations.map(item => {
+                        return (
+                        <div lat={item.Latitude} lng={item.Longitude}>
+                            <img style={markerStyle} src={pin} alt="pin" />
+                        </div>
+                        );
+                    })}
+    
                 </GoogleMapReact>
-                </div>
-
-
+                </div>      
 
                     <div className="flex justify-center fixed bottom-6 w-full"> {/* Centered button */}
                         <button type="button" className="text-white bg-red-700 font-bold rounded-full text-2xl px-5 py-2.5 text-center me-2 mb-2 focus:animate-spin w-3/5" onClick={handleClick}>Find Nearest</button>
