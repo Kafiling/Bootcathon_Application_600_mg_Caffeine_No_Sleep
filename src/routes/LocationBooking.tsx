@@ -41,18 +41,34 @@ const LocationBooking = (): JSX.Element => {
             };
             const newMap = new window.google.maps.Map(mapElement, mapOptions);
             setMap(newMap);
-
-            // Initialize Autocomplete
-            const autocompleteInstance = new window.google.maps.places.Autocomplete(
-                document.getElementById("autocomplete-input") as HTMLInputElement
-            );
-            autocompleteInstance.setFields(['geometry']);
-            autocompleteInstance.addListener("place_changed", handlePlaceSelect);
-            setAutocomplete(autocompleteInstance);
-
+    
             // Fetch and set current location as default
             fetchCurrentLocation(newMap);
-
+    
+            // Add click event listener to set selected place
+            newMap.addListener("click", (event) => {
+                const clickedLocation = {
+                    lat: event.latLng.lat(),
+                    lng: event.latLng.lng()
+                };
+                setSelectedPlace(clickedLocation);
+                updateCircle(new window.google.maps.LatLng(clickedLocation.lat, clickedLocation.lng), circleRadiusKm * 1000); // Convert km to meters
+            });
+    
+            // Initialize marker for selected place
+            const initialMarker = new window.google.maps.Marker({
+                position: defaultLocation,
+                map: newMap,
+                title: 'Selected Location',
+                icon: {
+                    url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                    scaledSize: new window.google.maps.Size(32, 32),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(16, 32)
+                }
+            });
+            setMarker(initialMarker);
+    
             // Add markers for each location in locationsData
             if (Array.isArray(locationsData.Locations)) {
                 locationsData.Locations.forEach((location) => {
@@ -69,33 +85,26 @@ const LocationBooking = (): JSX.Element => {
                     });
                 });
             }
-
-            // Initialize marker for selected place
-            const initialMarker = new window.google.maps.Marker({
-                position: defaultLocation,
+    
+            // Initialize circle for current location
+            const initialCircle = new google.maps.Circle({
+                strokeColor: "#4285F4",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#4285F4",
+                fillOpacity: 0.35,
                 map: newMap,
-                title: 'Selected Location',
-                icon: {
-                    url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                    scaledSize: new window.google.maps.Size(32, 32),
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(16, 32)
-                }
+                center: defaultLocation,
+                radius: circleRadiusKm * 1000 // Convert km to meters
             });
-            setMarker(initialMarker);
-
-            // Add click event listener to set selected place
-            newMap.addListener("click", (event) => {
-                const clickedLocation = {
-                    lat: event.latLng.lat(),
-                    lng: event.latLng.lng()
-                };
-                setSelectedPlace(clickedLocation);
-                initialMarker.setPosition(clickedLocation);
-                initialMarker.setTitle('Selected Location');
-            });
+            circleRef.current = initialCircle;
+    
+            // Update marker position to center of the circle
+            initialMarker.setPosition(defaultLocation);
         }
     };
+    
+    
 
     const fetchCurrentLocation = (map: google.maps.Map) => {
         if (navigator.geolocation) {
