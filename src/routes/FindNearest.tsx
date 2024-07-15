@@ -1,9 +1,33 @@
 import React, {FunctionComponent,useState} from 'react'
 import GoogleMapReact from 'google-map-react';
 import "./output.css"
-
+import closestLocations from '../components/Locator';"../components/Locator";
 function FindNearest() {
-    return (
+    const [location, setLocation] = useState(null);
+    
+    function currentLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+          console.log("Geolocation not supported");
+        }
+      }
+      
+      function success(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        setLocation({ latitude, longitude });
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      }
+    
+      function error() {
+        console.log("Unable to retrieve your location");
+      }
+
+      window.onload = currentLocation;
+      
+    
+      return (
         <>
         <header>
             <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -26,7 +50,7 @@ function FindNearest() {
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">This is a info alert</h3>
+                    <h3 className="text-lg font-medium">{closestLocations[0].LocationName} </h3>
                 </div>
                 <div className="mt-2 mb-4 text-sm">
                     More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
@@ -39,7 +63,7 @@ function FindNearest() {
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">This is a info alert</h3>
+                    <h3 className="text-lg font-medium">{closestLocations[1].LocationName}</h3>
                 </div>
                 <div className="mt-2 mb-4 text-sm">
                     More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
@@ -52,7 +76,7 @@ function FindNearest() {
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">This is a info alert</h3>
+                    <h3 className="text-lg font-medium">{closestLocations[2].LocationName}</h3>
                 </div>
                 <div className="mt-2 mb-4 text-sm">
                     More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
@@ -65,7 +89,7 @@ function FindNearest() {
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">This is a info alert</h3>
+                    <h3 className="text-lg font-medium">{closestLocations[3].LocationName}</h3>
                 </div>
                 <div className="mt-2 mb-4 text-sm">
                     More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
@@ -78,12 +102,13 @@ function FindNearest() {
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">This is a info alert</h3>
+                    <h3 className="text-lg font-medium">{closestLocations[4].LocationName}</h3>
                 </div>
                 <div className="mt-2 mb-4 text-sm">
                     More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
                 </div>
                 </div>
+                
                
                
             </section>

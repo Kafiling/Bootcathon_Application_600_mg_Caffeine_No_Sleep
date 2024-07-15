@@ -16,8 +16,8 @@ function MobilLocations() {
     const defaultProps = {
         //Cord of Bangkok ,unused saved for future use
         center: {
-          lat: 13.736717,
-          lng: 100.523186
+          lat: 13.720489856793682717,
+          lng: 100.4983042514412723186
         },
         zoom: 8
       };
@@ -28,7 +28,7 @@ function MobilLocations() {
     text: string;
     };
     //const AnyReactComponent: FunctionComponent<AnyReactComponentProps> = ({ lat, lng, text }) => <><button onClick={getAddress} type="button" className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 right-14 relative">Select Location</button><img src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/location-pin.png" className="h-6 sm:h-9" alt="Flowbite Logo" /></>;
-    const [userLocation, setUserLocation] = useState<{ latitude: any, longitude: any }>({ latitude: 13.736717, longitude: 100.523186 });
+    const [userLocation, setUserLocation] = useState<{ latitude: any, longitude: any }>({ latitude: 13.720489856793682, longitude: 100.49830425144127 }); 
 
     const getUserLocation = () => {
         // if geolocation is supported by the users browser
@@ -44,14 +44,14 @@ function MobilLocations() {
             // if there was an error getting the users location
             (error) => {
               console.error('Error getting user location:', error);
-              setUserLocation({ latitude: 13.736717, longitude: 100.523186 })
+              setUserLocation({ latitude: 13.720489856793682, longitude: 100.4983042514412723186 })
             }
           );
         }
         // if geolocation is not supported by the users browser
         else {
           console.error('Geolocation is not supported by this browser.');
-          setUserLocation({ latitude: 13.736717, longitude: 100.523186 })
+          setUserLocation({ latitude: 13.720489856793682717, longitude: 100.4983042514412723186 })
         }
       };
     
@@ -143,7 +143,7 @@ function MobilLocations() {
                 </div>      
 
                     <div className="flex justify-center fixed bottom-6 w-full"> {/* Centered button */}
-                        <button type="button" className="text-white bg-red-700 font-bold rounded-full text-2xl px-5 py-2.5 text-center me-2 mb-2 focus:animate-spin w-3/5" onClick={handleClick}>Find Nearest</button>
+                        <button type="button" className="text-white bg-red-700 font-bold rounded-full text-2xl px-5 py-2.5 text-center me-2 mb-2 w-3/5" onClick={handleClick}>Find Nearest</button>
                     </div>
                 </div>
             </section>
