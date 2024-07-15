@@ -60,15 +60,12 @@ function FindNearest() {
                           {location.AddressLine1} {location.AddressLine2} {location.City} {location.StateProvince} {location.PostalCode}
                         </div>
                         <div className="mt-2 mb-4 text-sm">
-                          {location.HoursOfOperation24.hours}
-                        </div>
-                        <div className="mt-2 mb-4 text-sm">
                           Opened : {location.WeeklyOperatingDays}
                         </div>
                         <div className="mt-2 mb-4 text-sm">
                           Telephone : {location.Telephone}
                         </div>
-                        
+                       
                         </div>
                         </>
                         );
