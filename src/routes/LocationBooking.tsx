@@ -397,6 +397,16 @@ const LocationBooking = (): JSX.Element => {
                             <p>{location.City}, {location.StateProvince} {location.PostalCode}</p>
                             <p>- Telephone: {location.Telephone}</p>
                             <p>- Operating Days: {location.WeeklyOperatingHours}</p>
+                            <div style={{ display: 'inline-block' }}>
+                                <p style={{ display: 'inline' }}>- Opening Hours: </p>
+                                <ul style={{ display: 'inline', padding: 0, margin: 0 }}>
+                                    {location.HoursOfOperation24.map((hours, index) => (
+                                        <li key={index} style={{ display: 'inline', marginRight: '10px' }}>
+                                            {hours.day}: {hours.hours}{index !== location.HoursOfOperation24.length - 1 && ', '}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <a
                                     href={`https://www.google.com/maps/search/?api=1&query=${location.LocationName}`}
