@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import locationsData from "./location.json"; // Import locations.json
+import React, { useEffect, useState, useRef } from 'react';
+import locationsData from './location.json'; // Import locations.json
+import swal from 'sweetalert';
 
 const LocationBooking = (): JSX.Element => {
     const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -11,7 +12,7 @@ const LocationBooking = (): JSX.Element => {
     const circleRef = useRef<google.maps.Circle | null>(null);
     const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10);
     const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
-    const googleMapsApiKey = "api-key"; // Replace with your Google Maps API key
+    const googleMapsApiKey = "api"; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
     useEffect(() => {
@@ -19,6 +20,9 @@ const LocationBooking = (): JSX.Element => {
         googleScript.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places,geometry`;
         googleScript.async = true;
         googleScript.onload = initMap;
+        googleScript.onerror = () => {
+            console.error("Error loading Google Maps script");
+        };
         document.body.appendChild(googleScript);
 
         return () => {
@@ -103,6 +107,8 @@ const LocationBooking = (): JSX.Element => {
                 newMap.setCenter(selectedLocation);
                 updateCircle(new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng), circleRadiusKm * 1000);
             });
+        } else {
+            console.error("Map element not found");
         }
     };
 
@@ -227,19 +233,39 @@ const LocationBooking = (): JSX.Element => {
         }
     };
 
+    const handleBookingClick = (locationName: string) => {
+        swal({
+            title: "Are you sure?",
+            text: `Do you want to book at ${locationName}?`,
+            icon: "warning",
+            buttons: ["Cancel", "Yes"],
+            dangerMode: true,
+        }).then((willBook) => {
+            if (willBook) {
+                swal({
+                    title: "Done!",
+                    text: `Booking clicked for ${locationName}`,
+                    icon: "success",
+                    timer: 2000,
+                    button: false
+                });
+            }
+        });
+    };
+    
     return (
         <div>
             <header>
                 <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
                     <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-                        <a href="" className="flex items-center">
+                        <a href="#" className="flex items-center">
                             <img src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/technician_invert.png" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
                             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Location for service</span>
                         </a>
                     </div>
                 </nav>
             </header>
-            <div style={{ height: '400px', width: '100%', marginBottom: '20px' }}>
+            <div style={{ height: '350px', width: '100%', marginBottom: '20px' }}>
                 <div id="google-map" style={{ height: '100%', width: '100%' }}></div>
             </div>
             <div style={{ textAlign: 'center' }}>
@@ -276,6 +302,20 @@ const LocationBooking = (): JSX.Element => {
                 </button>
             </div>
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <label htmlFor="radius-input" className="mr-2">Circle Radius (km):</label>
+                <input
+                    id="radius-input"
+                    type="range"
+                    value={circleRadiusKm}
+                    onChange={handleRadiusInputChange}
+                    min="1"
+                    max="50" // Adjust the max value as needed
+                    step="1"
+                    className="slider appearance-none w-80 bg-gray-200 h-1 rounded outline-none focus:outline-none focus:bg-gray-300 transition-all duration-300 ease-in-out"
+                />
+                <span className="ml-2">{circleRadiusKm} km</span>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
                 <label htmlFor="radius-input" style={{ marginRight: '10px' }}>Circle Radius (km):</label>
                 <input
                     id="radius-input"
@@ -293,27 +333,56 @@ const LocationBooking = (): JSX.Element => {
                     }}
                 />
             </div>
-            <div>
-                {locationsData.Locations.map((location) => (
-                    <div key={location.LocationID} style={{
-                        border: '1px solid #ccc',
-                        borderRadius: '5px',
-                        padding: '10px',
-                        margin: '10px 0',
-                        maxWidth: '400px',
-                        textAlign: 'left',
-                        backgroundColor: '#f9f9f9'
-                    }}>
-                        <h3>{location.LocationName}</h3>
-                        <p>{location.AddressLine1}, {location.AddressLine2}</p>
-                        <p>{location.City}, {location.StateProvince} {location.PostalCode}</p>
-                        <p>Telephone: {location.Telephone}</p>
-                        <p>Weekly Operating Days: {location.WeeklyOperatingDays}</p>
-                        <p>Weekly Operating Hours: {location.WeeklyOperatingHours}</p>
-                        <p>Store Amenities: {location.StoreAmenities.join(', ')}</p>
-                    </div>
-                ))}
+            <div className="flex justify-center">
+                <div>
+                    {locationsData.Locations.map((location) => (
+                        <div key={location.LocationID} style={{
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                            padding: '10px',
+                            margin: '10px 0',
+                            maxWidth: '400px',
+                            textAlign: 'left',
+                            backgroundColor: '#f9f9f9'
+                        }}>
+                            <h3>{location.LocationName}</h3>
+                            <p>{location.AddressLine1}, {location.AddressLine2}</p>
+                            <p>{location.City}, {location.StateProvince} {location.PostalCode}</p>
+                            <p>- Telephone: {location.Telephone}</p>
+                            <p>- Operating Days: {location.WeeklyOperatingHours}</p>
+                            <div style={{ display: 'inline-block' }}>
+                                <p style={{ display: 'inline' }}>- Opening Hours: </p>
+                                <ul style={{ display: 'inline', padding: 0, margin: 0 }}>
+                                    {location.HoursOfOperation24.map((hours, index) => (
+                                        <li key={index} style={{ display: 'inline', marginRight: '10px' }}>
+                                            {hours.day}: {hours.hours}{index !== location.HoursOfOperation24.length - 1 && ', '}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => handleBookingClick(location.LocationName)}
+                                    style={{
+                                        padding: '10px 20px',
+                                        fontSize: '16px',
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                        marginTop: '10px'
+                                    }}
+                                >
+                                    Book now
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
+
         </div>
     );
 };
