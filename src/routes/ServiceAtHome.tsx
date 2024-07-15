@@ -78,10 +78,13 @@ function ServiceAtHome() {
           );
           console.log(city, state, country);
           console.log(address);
+          document.getElementById("address").value = address;
         })
         .catch(console.error);
     }
     else { console.log("No user location found") }
+
+    
   }
 
   const handleApiLoaded = (map, maps) => {
@@ -115,7 +118,7 @@ function ServiceAtHome() {
     </nav>
 </header>
 <section className='px-4'>
-  <h2 className="text-2xl text-red-600">บริการถึงใจ ใส่ใจถึงหน้าบ้านคุณ</h2>
+  <h2 className="text-2xl text-red-600 pt-2">บริการถึงใจ ใส่ใจถึงหน้าบ้านคุณ</h2>
   <p className="my-4 text-lg text-gray-500">📍 เลือกตำแหน่งที่ต้องการรับบริการ</p>
     <div style={{ height: '30vh', width: '100%'}}>
     {/*TODO : Add Google Map API Key to .env file */}
@@ -133,56 +136,97 @@ function ServiceAtHome() {
         />
       </GoogleMapReact>
     </div>
-    <p className="my-4 text-lg text-black">ข้อมูลผู้ใช้บริการสำหรับติดต่อช่าง 🏷</p>
-    <form>
-    <div class="grid gap-6 mb-6 md:grid-cols-2 pt-4">
+    
+    <form >
+    <div className="grid gap-6 mb-6 grid-cols-2 pt-4">
+      <div className="col-span-2">
+            <label for="address" className="block mb-2 text-sm font-medium text-gray-900 ">สถานที่นัดรับบริการ*
+            </label>
+            <textarea  rows={4} id="address" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder='กรุณากด "Select Location" เพื่อเลือกสถานที่นัดรับบริการ' required />
+        </div>
+        <p className="my-4 text-lg text-black col-span-2">ข้อมูลผู้ใช้บริการสำหรับติดต่อช่าง 🧑‍🔧</p>
         <div>
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 ">First name</label>
-            <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="John" required />
+            <label for="first_name" className="block mb-2 text-sm font-medium text-gray-900 ">ชื่อจริง*
+            </label>
+            <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="เอ็กซอน" required />
         </div>
         <div>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 ">Last name</label>
-            <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Doe" required />
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900 ">นามสกุล*</label>
+            <input type="text" id="last_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="โมบิล" required />
         </div>
         <div>
-            <label for="company" class="block mb-2 text-sm font-medium text-gray-900 ">Company</label>
-            <input type="text" id="company" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Flowbite" required />
+            <label for="tel" className="block mb-2 text-sm font-medium text-gray-900 ">เบอร์โทรศัพท์*</label>
+            <input type="tel" id="phone" name="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="เบอร์โทรศัพท์" required />
         </div>  
-        <div>
-            <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 ">Phone number</label>
-            <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required />
-        </div>
-        <div>
-            <label for="website" class="block mb-2 text-sm font-medium text-gray-900 ">Website URL</label>
-            <input type="url" id="website" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="flowbite.com" required />
-        </div>
-        <div>
-            <label for="visitors" class="block mb-2 text-sm font-medium text-gray-900 ">Unique visitors (per month)</label>
-            <input type="number" id="visitors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="" required />
-        </div>
+        <p className="my-4 text-lg text-black col-span-2">วันและเวลาที่ต้องการใช้บริการ 📅</p>
+        <div class="relative max-w-sm col-span-2">
+  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none ">
+    <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+    </svg>
+  </div>
+  <input  id="default-datepicker" type="datetime-local" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Select date"/ >
+</div>
+<p className="my-4 text-lg text-black col-span-2">รถที่เข้าใช้บริการ 🚘</p>
+<div className="col-span-2">
+  <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+    <option selected>เลือกยี่ห้อรถที่ใช้บริการ*</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Mitsubishi">Mitsubishi</option>
+  </select>
+</div>
+<div className="col-span-2">
+    <label for="first_name" className="block mb-2 text-sm font-medium text-gray-900 ">รุ่นรถยนต์*
+    </label>
+    <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="กรุณาใส่ชื่อรุ่นรถยนต์ของท่าน" required />
+</div>
+
+<p className="my-4 text-lg text-black col-span-2">เลือกบริการที่ต้องการ 🔧</p>   
+<img className="w-full h-auto col-span-2 " src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/Services.png  " alt="image description"></img>
+<p className="my-4 text-lg text-black col-span-2">โปรดเลือกอย่างน้อย 1 บริการ </p> 
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการตรวจเช็คสภาพรถเบื้องต้น</label>
+</div>  
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการเปลี่ยนถ่ายน้ำมันเครื่อง Mobil 1</label>
+</div> 
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการซ่อมแซมระบบปรับอากาศภายใน</label>
+</div> 
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการเปลี่ยนระบบโช๊ค</label>
+</div> 
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการเปลี่ยนยางและล้อ</label>
+</div> 
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการเปลี่ยนแบตเตอรี่และตรวจเช็คระบบไฟฟ้า</label>
+</div> 
+<div class="flex items-center  col-span-2">
+    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "/>
+    <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">บริการอื่น ๆ โปรดสอบถามทางช่างเพิ่มเติม</label>
+</div> 
+<div className="col-span-2">
+    <label for="first_name" className="block mb-2 text-sm font-medium text-gray-900 ">คูปอง/โค้ดโปรโมชั่น
+    </label>
+    <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder=""/>
+</div>
+    
+    <button onClick={() => location.replace("/at-home-confirm")}  type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center col-span-2">Submit</button>
+    
     </div>
-    <div class="mb-6">
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 ">Email address</label>
-        <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="john.doe@company.com" required />
-    </div> 
-    <div class="mb-6">
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">Password</label>
-        <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="•••••••••" required />
-    </div> 
-    <div class="mb-6">
-        <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-900 ">Confirm password</label>
-        <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="•••••••••" required />
-    </div> 
-    <div class="flex items-start mb-6">
-        <div class="flex items-center h-5">
-        <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required />
-        </div>
-        <label for="remember" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
-    </div>
-    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-</form>
+    </form>
+
 </section>
     
+
     </>
   )
 }
