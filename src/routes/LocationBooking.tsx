@@ -5,6 +5,7 @@ import swal from 'sweetalert';
 const LocationBooking = (): JSX.Element => {
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const [selectedPlace, setSelectedPlace] = useState<{ lat: number, lng: number } | null>(null);
+    const [clickedLocation, setClickedLocation] = useState<{ lat: number, lng: number } | null>(null);
     const [searchValue, setSearchValue] = useState<string>('');
     const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
     const [marker, setMarker] = useState<google.maps.Marker | null>(null);
@@ -12,6 +13,7 @@ const LocationBooking = (): JSX.Element => {
     const circleRef = useRef<google.maps.Circle | null>(null);
     const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10);
     const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+    const [mapCenter, setMapCenter] = useState<{ lat: number, lng: number }>({ lat: 0, lng: 0 });
     const googleMapsApiKey = "api"; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
@@ -35,6 +37,32 @@ const LocationBooking = (): JSX.Element => {
             updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), circleRadiusKm * 1000);
         }
     }, [selectedPlace, circleRadiusKm]);
+
+    useEffect(() => {
+        if (map && clickedLocation) {
+            // Update the map to show a temporary marker or highlight effect for clickedLocation
+            const clickedMarker = new google.maps.Marker({
+                position: clickedLocation,
+                map: map,
+                title: 'Clicked Location',
+                icon: {
+                    url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', // Adjust icon as needed
+                    scaledSize: new window.google.maps.Size(32, 32),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(16, 32)
+                }
+            });
+
+            // Center map on clicked location
+            map.setCenter(clickedLocation);
+            setMapCenter(clickedLocation);
+
+            // Optionally, you can set a timeout to remove the temporary marker or highlight effect
+            setTimeout(() => {
+                clickedMarker.setMap(null);
+            }, 3000); // Remove marker after 3 seconds
+        }
+    }, [clickedLocation, map]);
 
     const initMap = () => {
         const mapElement = document.getElementById('google-map');
@@ -105,6 +133,7 @@ const LocationBooking = (): JSX.Element => {
                 setSelectedPlace(selectedLocation);
                 setSearchValue(place.formatted_address || '');
                 newMap.setCenter(selectedLocation);
+                setMapCenter(selectedLocation);
                 updateCircle(new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng), circleRadiusKm * 1000);
             });
         } else {
@@ -122,6 +151,7 @@ const LocationBooking = (): JSX.Element => {
                 setSelectedPlace(currentLocation);
                 map.setCenter(currentLocation);
                 map.setZoom(15);
+                setMapCenter(currentLocation);
             }, () => {
                 console.error("Error in fetching current location.");
             });
@@ -143,6 +173,7 @@ const LocationBooking = (): JSX.Element => {
                     lng: results[0].geometry.location.lng()
                 };
                 setSelectedPlace(selectedLocation);
+                setMapCenter(selectedLocation);
                 updateCircle(new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng), circleRadiusKm * 1000);
             } else {
                 console.error('Geocode was not successful for the following reason:', status);
@@ -202,8 +233,6 @@ const LocationBooking = (): JSX.Element => {
                             anchor: new window.google.maps.Point(16, 32)
                         }
                     });
-                } else {
-                    marker.setMap(map);
                 }
                 newMarkers.push(marker);
             } else {
@@ -252,7 +281,20 @@ const LocationBooking = (): JSX.Element => {
             }
         });
     };
-    
+
+    const handleLocationBoxClick = (location: any) => {
+        const clickedLocation = {
+            lat: location.Latitude,
+            lng: location.Longitude
+        };
+        setClickedLocation(clickedLocation);
+    };
+
+    const filteredLocations = locationsData.Locations.filter(location => {
+        if (!selectedPlace) return false;
+        return isMarkerInCircle(location, selectedPlace, circleRadiusKm);
+    });
+
     return (
         <div>
             <header>
@@ -335,32 +377,46 @@ const LocationBooking = (): JSX.Element => {
             </div>
             <div className="flex justify-center">
                 <div>
-                    {locationsData.Locations.map((location) => (
-                        <div key={location.LocationID} style={{
-                            border: '1px solid #ccc',
-                            borderRadius: '5px',
-                            padding: '10px',
-                            margin: '10px 0',
-                            maxWidth: '400px',
-                            textAlign: 'left',
-                            backgroundColor: '#f9f9f9'
-                        }}>
+                    {filteredLocations.map((location) => (
+                        <div
+                            key={location.LocationID}
+                            style={{
+                                border: '1px solid #ccc',
+                                borderRadius: '5px',
+                                padding: '10px',
+                                margin: '10px 0',
+                                maxWidth: '400px',
+                                textAlign: 'left',
+                                backgroundColor: '#f9f9f9',
+                                cursor: 'pointer' // Add cursor pointer for click effect
+                            }}
+                            onClick={() => handleLocationBoxClick(location)}
+                        >
                             <h3>{location.LocationName}</h3>
                             <p>{location.AddressLine1}, {location.AddressLine2}</p>
                             <p>{location.City}, {location.StateProvince} {location.PostalCode}</p>
                             <p>- Telephone: {location.Telephone}</p>
                             <p>- Operating Days: {location.WeeklyOperatingHours}</p>
-                            <div style={{ display: 'inline-block' }}>
-                                <p style={{ display: 'inline' }}>- Opening Hours: </p>
-                                <ul style={{ display: 'inline', padding: 0, margin: 0 }}>
-                                    {location.HoursOfOperation24.map((hours, index) => (
-                                        <li key={index} style={{ display: 'inline', marginRight: '10px' }}>
-                                            {hours.day}: {hours.hours}{index !== location.HoursOfOperation24.length - 1 && ', '}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div style={{ textAlign: 'right' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${location.LocationName}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        marginLeft: '0',
+                                        padding: '10px 20px',
+                                        fontSize: '16px',
+                                        backgroundColor: '#007BFF',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                        marginTop: '10px',
+                                        textDecoration: 'none'
+                                    }}
+                                >
+                                    View on Google Maps
+                                </a>
                                 <button
                                     type="button"
                                     onClick={() => handleBookingClick(location.LocationName)}
@@ -382,7 +438,6 @@ const LocationBooking = (): JSX.Element => {
                     ))}
                 </div>
             </div>
-
         </div>
     );
 };
