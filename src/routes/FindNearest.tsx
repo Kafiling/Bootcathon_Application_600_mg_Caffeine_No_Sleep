@@ -2,8 +2,10 @@ import React, {FunctionComponent,useState} from 'react'
 import GoogleMapReact from 'google-map-react';
 import "./output.css"
 import closestLocations from '../components/Locator';"../components/Locator";
+import {setDefaults,fromLatLng,setKey,geocode,RequestType} from "react-geocode";
 function FindNearest() {
     const [location, setLocation] = useState(null);
+    setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
     
     function currentLocation() {
         if (navigator.geolocation) {
@@ -42,77 +44,38 @@ function FindNearest() {
             </nav>
         </header>
 
-            <section className='mx-6 my-6'>
-                
-                <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
-                <div className="flex items-center">
-                    <svg className="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">{closestLocations[0].LocationName} </h3>
+            <section className='mx-4 my-4'> 
+                <div className="relative justify-center items-center h-auto bg-gray-100 rounded-2xl">
+                <div className='px-2.5 py-3.5'>
+                {closestLocations.map(location => {
+                        return (
+                        <>
+                        <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
+                        <div className="flex items-center">
+                            <img className = "h-6" src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/profile.png" alt="Logo" />
+                            <span className="sr-only">Info</span>
+                            <h3 className="text-lg font-medium ml-5">{location.DisplayName} </h3>
+                        </div>
+                        <div className="mt-4 mb-4 text-sm">
+                          {location.AddressLine1} {location.AddressLine2} {location.City} {location.StateProvince} {location.PostalCode}
+                        </div>
+                        <div className="mt-2 mb-4 text-sm">
+                          {location.HoursOfOperation24.hours}
+                        </div>
+                        <div className="mt-2 mb-4 text-sm">
+                          Opened : {location.WeeklyOperatingDays}
+                        </div>
+                        <div className="mt-2 mb-4 text-sm">
+                          Telephone : {location.Telephone}
+                        </div>
+                        
+                        </div>
+                        </>
+                        );
+                    })}
+                  </div>
                 </div>
-                <div className="mt-2 mb-4 text-sm">
-                    More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-                </div>
-                </div>
-
-                <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
-                <div className="flex items-center">
-                    <svg className="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">{closestLocations[1].LocationName}</h3>
-                </div>
-                <div className="mt-2 mb-4 text-sm">
-                    More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-                </div>
-                </div>
-
-                <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
-                <div className="flex items-center">
-                    <svg className="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">{closestLocations[2].LocationName}</h3>
-                </div>
-                <div className="mt-2 mb-4 text-sm">
-                    More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-                </div>
-                </div>
-
-                <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
-                <div className="flex items-center">
-                    <svg className="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">{closestLocations[3].LocationName}</h3>
-                </div>
-                <div className="mt-2 mb-4 text-sm">
-                    More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-                </div>
-                </div>
-
-                <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
-                <div className="flex items-center">
-                    <svg className="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span className="sr-only">Info</span>
-                    <h3 className="text-lg font-medium">{closestLocations[4].LocationName}</h3>
-                </div>
-                <div className="mt-2 mb-4 text-sm">
-                    More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-                </div>
-                </div>
-                
-               
-               
             </section>
-            
         </>
     )
 }

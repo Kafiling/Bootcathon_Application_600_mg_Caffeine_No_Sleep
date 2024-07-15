@@ -1,7 +1,7 @@
 import locations from '../location.json';
 
 // Default location coordinates
-const defaultLocation = location ? { latitude: location.latitude, longitude: location.longitude } : {
+const defaultLocation = {
     latitude: 13.720594083587173,
     longitude: 100.49852955698758
 };
@@ -37,5 +37,4 @@ function findClosestLocations(): Location[] {
 
 // Usage
 const closestLocations = findClosestLocations();
-console.log(closestLocations[0].LocationName);
 export default closestLocations;
