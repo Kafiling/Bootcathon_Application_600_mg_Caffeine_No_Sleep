@@ -18,7 +18,7 @@
     "@types/react-addons-pure-render-mixin": "^0.14.24",
     "@types/react-router-dom": "^5.3.3",
     "flowbite": "^2.4.1",
-    "google-map-react": "^2.2.1",
+  
     "immutable": "^4.3.6",
     "lodash": "^4.17.21",
 
@@ -39,16 +39,11 @@
     "react-google-places-autocomplete": "^4.0.1",
     "react-router-dom": "^6.24.1",
     "sweetalert": "^2.1.2",
-    "sweetalert2": "^11.12.2"
-  },
-  "devDependencies": {
-    "@types/google-map-react": "^2.1.10",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-
+    "sweetalert2": "^11.12.2",
     "@vitejs/plugin-react": "4.3.1",
     "tailwindcss": "^3.4.4",
     "typescript": "5.5.3",
     "vite": "5.3.2"
   }
+  
 }

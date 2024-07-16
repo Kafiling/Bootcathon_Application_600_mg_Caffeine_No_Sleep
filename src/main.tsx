@@ -36,6 +36,7 @@ const router = createBrowserRouter([
     path: "/findnearest",
     element: <FindNearest/>,
   },
+  {
 
     path: "/Booking-service",
     element: <BookingService/>,

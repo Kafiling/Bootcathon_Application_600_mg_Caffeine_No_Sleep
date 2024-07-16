@@ -7,7 +7,7 @@ import mobillocations from "../location.json";
 
 
 function MobilLocations() { 
-    setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY); // Your API key here.
+    setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY_Tatar); // Your API key here.
     const navigate = useNavigate();
     function handleClick() {
         navigate("/findnearest");
