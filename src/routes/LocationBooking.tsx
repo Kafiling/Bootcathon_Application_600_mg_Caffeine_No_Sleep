@@ -474,21 +474,24 @@ const LocationBooking = (): JSX.Element => {
             {bookingModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                        <h3 className="text-lg font-medium mb-4">Select date and time for booking at {bookingLocation}</h3>
-                        <DatePicker
-                            selected={bookingDate}
-                            onChange={(date: Date | null) => setBookingDate(date)}
-                            showTimeSelect
-                            timeIntervals={60}
-                            dateFormat="MMMM d, yyyy h:mm aa"
-                            className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none"
-                            minDate={new Date()} // Set minimum date to current date
-                            minTime={new Date().setHours(8, 0, 0)} // Set minimum time to 8:00 AM
-                            maxTime={new Date().setHours(17, 0, 0)} // Set maximum time to 5:00 PM (17:00)
-                        />
+                        <h3 className="text-lg font-medium mb-4 text-center">Select date and time for booking at {bookingLocation}</h3>
 
+                        <div className="modal-content flex flex-col items-center">
+                            <DatePicker
+                                selected={bookingDate}
+                                onChange={(date: Date | null) => setBookingDate(date)}
+                                showTimeSelect
+                                timeIntervals={60}
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none"
+                                minDate={new Date()} // Set minimum date to current date
+                                minTime={new Date().setHours(8, 0, 0)} // Set minimum time to 8:00 AM
+                                maxTime={new Date().setHours(17, 0, 0)} // Set maximum time to 5:00 PM (17:00)
+                            />
+                            
+                        </div>
 
-                        <div className="flex justify-end">
+                        <div className="flex justify-center">
                             <button
                                 type="button"
                                 className="px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none"
@@ -507,6 +510,7 @@ const LocationBooking = (): JSX.Element => {
                     </div>
                 </div>
             )}
+
         </div>
 
     );
