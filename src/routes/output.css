@@ -863,6 +863,22 @@ video {
   height: 324px;
 }
 
+.h-\[\E38\E38 600px\] {
+  height: ุุ600px;
+}
+
+.h-\[600px\] {
+  height: 600px;
+}
+
+.h-\[550px\] {
+  height: 550px;
+}
+
+.h-\[560px\] {
+  height: 560px;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -937,6 +953,10 @@ video {
 
 .max-w-screen-xl {
   max-width: 1280px;
+}
+
+.max-w-\[400px\] {
+  max-width: 400px;
 }
 
 .-translate-x-1\/2 {

@@ -23,7 +23,7 @@ const LocationBooking = (): JSX.Element => {
     const [isExtended, setIsExtended] = useState(false);
     const [selectedServices, setSelectedServices] = useState<string[]>([]); // State to store selected services
 
-    const googleMapsApiKey = "AIzaSyCtQadmdF_Pbj6HdkepRz4bjMMorO58f3g"; // Replace with your Google Maps API key
+    const googleMapsApiKey = "api"; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
     useEffect(() => {
@@ -516,6 +516,7 @@ const LocationBooking = (): JSX.Element => {
                                     <span className="mb-1 font-thin text-2xl">{isExtended ? '˄' : '˅'}</span>
                                 </div>
                             </button>
+                            <div>
                             {isExtended && (
                                 <div className="w-full mb-4">
                                     {/* Map over locationsData.Services or use a static list */}
@@ -532,6 +533,7 @@ const LocationBooking = (): JSX.Element => {
                                     ))}
                                 </div>
                             )}
+                            </div>
                         </div>
 
                         <div className="flex justify-center">
