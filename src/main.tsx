@@ -26,6 +26,7 @@ const router = createBrowserRouter([
     path: "/Booking-service/Location-Booking",
     element: <LocationBooking/>,
   },
+
 ]);
 
 ReactDOM.render(

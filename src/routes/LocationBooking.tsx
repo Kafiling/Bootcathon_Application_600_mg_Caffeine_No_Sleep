@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import locationsData from './location.json'; // Import locations.json
 import swal from 'sweetalert';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const LocationBooking = (): JSX.Element => {
     const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -14,6 +16,10 @@ const LocationBooking = (): JSX.Element => {
     const [circleRadiusKm, setCircleRadiusKm] = useState<number>(10);
     const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
     const [mapCenter, setMapCenter] = useState<{ lat: number, lng: number }>({ lat: 0, lng: 0 });
+    const [bookingModalOpen, setBookingModalOpen] = useState<boolean>(false); // State to manage modal open/close
+    const [bookingLocation, setBookingLocation] = useState<string>(''); // State to store booking location name
+    const [bookingDate, setBookingDate] = useState<Date | null>(null); // State to store selected booking date/time
+
     const googleMapsApiKey = "api"; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
@@ -262,24 +268,9 @@ const LocationBooking = (): JSX.Element => {
         }
     };
 
-    const handleBookingClick = (locationName: string) => {
-        swal({
-            title: "Are you sure?",
-            text: `Do you want to book at ${locationName}?`,
-            icon: "warning",
-            buttons: ["Cancel", "Yes"],
-            dangerMode: true,
-        }).then((willBook) => {
-            if (willBook) {
-                swal({
-                    title: "Done!",
-                    text: `Booking clicked for ${locationName}`,
-                    icon: "success",
-                    timer: 2000,
-                    button: false
-                });
-            }
-        });
+    const handleBookingClick = (location: any) => {
+        setBookingLocation(location.LocationName); // Store booking location name
+        setBookingModalOpen(true); // Open booking modal
     };
 
     const handleLocationBoxClick = (location: any) => {
@@ -290,15 +281,45 @@ const LocationBooking = (): JSX.Element => {
         setClickedLocation(clickedLocation);
     };
 
+    const handleRadiusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCircleRadiusKm(Number(event.target.value));
+    };
+
     const filteredLocations = locationsData.Locations.filter(location => {
         if (!selectedPlace) return false;
         return isMarkerInCircle(location, selectedPlace, circleRadiusKm);
     });
 
+    const handleBookingConfirm = () => {
+        // Implement booking confirmation logic here
+        if (bookingDate) {
+            swal("Booking Confirmed!", `You have successfully booked ${bookingLocation} on ${bookingDate.toLocaleString()}`, "success");
+        } else {
+            swal("Please select a date and time!", "You must select a date and time to confirm your booking.", "warning");
+        }
+        setBookingModalOpen(false); // Close booking modal after confirmation
+    };
+
+    const setTimeForDatePicker = (hours: number, minutes: number): Date => {
+        const today = new Date();
+        const selectedTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes);
+        return selectedTime;
+    };
+
+    const isDateValid = (date: Date): boolean => {
+        const minTime = new Date();
+        minTime.setHours(8, 0, 0, 0); // Minimum time 8:00 AM
+        const maxTime = new Date();
+        maxTime.setHours(17, 0, 0, 0); // Maximum time 5:00 PM
+
+        // Compare the selected date with the current date and time
+        return date >= minTime && date <= maxTime;
+    };
+
     return (
         <div>
             <header>
-                <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+                <nav className="bg-gray-800 border-gray-800 px-4 lg:px-6 py-2.5 dark:bg-gray-900 dark:border-gray-900">
                     <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
                         <a href="#" className="flex items-center">
                             <img src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/technician_invert.png" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
@@ -445,10 +466,49 @@ const LocationBooking = (): JSX.Element => {
                                 </button>
                             </div>
                         </div>
+
                     ))}
                 </div>
             </div>
+            {/* Booking Modal */}
+            {bookingModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                        <h3 className="text-lg font-medium mb-4">Select date and time for booking at {bookingLocation}</h3>
+                        <DatePicker
+                            selected={bookingDate}
+                            onChange={(date: Date | null) => setBookingDate(date)}
+                            showTimeSelect
+                            timeIntervals={60}
+                            dateFormat="MMMM d, yyyy h:mm aa"
+                            className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none"
+                            minDate={new Date()} // Set minimum date to current date
+                            minTime={new Date().setHours(8, 0, 0)} // Set minimum time to 8:00 AM
+                            maxTime={new Date().setHours(17, 0, 0)} // Set maximum time to 5:00 PM (17:00)
+                        />
+
+
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none"
+                                onClick={handleBookingConfirm}
+                            >
+                                Confirm Booking
+                            </button>
+                            <button
+                                type="button"
+                                className="px-4 py-2 bg-gray-200 text-gray-700 ml-4 rounded-lg focus:outline-none"
+                                onClick={() => setBookingModalOpen(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
+
     );
 };
 
