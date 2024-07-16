@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 export const BookingService = (): JSX.Element => {
-    const redImage = "https://cdn.discordapp.com/attachments/1257716666293555201/1261645363157401649/redbmw.png?ex=6693b64e&is=669264ce&hm=0d530e2cdcb995b0c5e7e0ce50233efe2c067876238c2ac8c2ecad174c452c4f&";
-    const blueImage = "https://cdn.discordapp.com/attachments/1257716666293555201/1261645363496878130/bluebmw.png?ex=6693b64e&is=669264ce&hm=99940e014607e508247afced9b0914322615a03842dfb0842716868ad776ac5e&";
+    const redImage = "https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/redbmw.png";
+    const blueImage = "https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/bluebmw.png";
 
     const [currentImage, setCurrentImage] = useState(blueImage);
     const [selected, setSelected] = useState({
@@ -31,7 +31,7 @@ export const BookingService = (): JSX.Element => {
                     <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
                         <a href="/" className="flex items-center"> {/* Replace with appropriate home link */}
                             <img src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/technician_invert.png" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
-                            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Booking Service</span>
+                            <span className="self-center text-xl  whitespace-nowrap dark:text-white">Booking Service</span>
                         </a>
                     </div>
                 </nav>
@@ -47,7 +47,7 @@ export const BookingService = (): JSX.Element => {
                         </div>
                         <div className="absolute w-full h-[635px] top-0 left-0">
                             <div className="absolute w-full h-12 top-0 left-0 bg-[#2e60a7]">
-                                <div className="w-[301px] top-[3px] left-[17px] text-white text-[28px] absolute font-bold tracking-[0] leading-[normal] ">
+                                <div className="w-[301px] top-[3px] left-[17px] text-white text-[28px] absolute  tracking-[0] leading-[normal] ">
                                     คุณต้องการใช้บริการไหน
                                 </div>
                             </div>
@@ -65,7 +65,7 @@ export const BookingService = (): JSX.Element => {
                                                 alt="oilchange"
                                                 src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/oilchange.png"
                                             />
-                                            <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
+                                            <div className="text-black  tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
                                                 การบำรุงรักษาทั่วไป
                                             </div>
                                         </div>
@@ -79,7 +79,7 @@ export const BookingService = (): JSX.Element => {
                                                 alt="breakcheck"
                                                 src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/breakcheck.png"
                                             />
-                                            <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
+                                            <div className="text-black  tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
                                                 การตรวจเช็คระบบเบรก
                                             </div>
                                         </div>
@@ -93,7 +93,7 @@ export const BookingService = (): JSX.Element => {
                                                 alt="tirecheck"
                                                 src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/tirecheck.png"
                                             />
-                                            <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
+                                            <div className="text-black  tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
                                                 การตรวจเช็คยางรถยนต์
                                             </div>
                                         </div>
@@ -107,7 +107,7 @@ export const BookingService = (): JSX.Element => {
                                                 alt="enginecheck"
                                                 src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/enginecheck.png"
                                             />
-                                            <div className="text-black font-bold tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
+                                            <div className="text-black  tracking-[0] leading-[normal] text-center text-sm xs:text-base absolute bottom-1.5 left-0 right-0">
                                                 การบำรุงรักษาเครื่องยนต์
                                             </div>
                                         </div>

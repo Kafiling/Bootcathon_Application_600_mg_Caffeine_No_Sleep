@@ -23,7 +23,7 @@ const LocationBooking = (): JSX.Element => {
     const [isExtended, setIsExtended] = useState(false);
     const [selectedServices, setSelectedServices] = useState<string[]>([]); // State to store selected services
 
-    const googleMapsApiKey = "api"; // Replace with your Google Maps API key
+    const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY_74; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
     useEffect(() => {

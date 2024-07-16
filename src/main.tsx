@@ -23,7 +23,6 @@ const router = createBrowserRouter([
     element: <ServiceAtHome/>,
   },
   {
-
     path: "/Booking-service",
     element: <BookingService/>,
   },
@@ -31,12 +30,10 @@ const router = createBrowserRouter([
     path: "/Booking-service/Location-Booking",
     element: <LocationBooking/>,
   },
-
-
+  {
     path: "/at-home-confirm",
     element: <ServiceAtHomeConfirm/>,
   },
-
 ]);
 
 ReactDOM.render(
