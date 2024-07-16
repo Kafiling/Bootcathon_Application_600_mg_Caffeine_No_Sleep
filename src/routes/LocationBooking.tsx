@@ -3,6 +3,7 @@ import locationsData from './location.json'; // Import locations.json
 import swal from 'sweetalert';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const LocationBooking = (): JSX.Element => {
     const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -19,8 +20,10 @@ const LocationBooking = (): JSX.Element => {
     const [bookingModalOpen, setBookingModalOpen] = useState<boolean>(false); // State to manage modal open/close
     const [bookingLocation, setBookingLocation] = useState<string>(''); // State to store booking location name
     const [bookingDate, setBookingDate] = useState<Date | null>(null); // State to store selected booking date/time
+    const [isExtended, setIsExtended] = useState(false);
+    const [selectedServices, setSelectedServices] = useState<string[]>([]); // State to store selected services
 
-    const googleMapsApiKey = "api"; // Replace with your Google Maps API key
+    const googleMapsApiKey = "AIzaSyCtQadmdF_Pbj6HdkepRz4bjMMorO58f3g"; // Replace with your Google Maps API key
     const defaultLocation = { lat: 0, lng: 0 };
 
     useEffect(() => {
@@ -43,6 +46,12 @@ const LocationBooking = (): JSX.Element => {
             updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), circleRadiusKm * 1000);
         }
     }, [selectedPlace, circleRadiusKm]);
+
+    useEffect(() => {
+        // Fetch or set initial selected services if needed
+        setSelectedServices(['การบำรุงรักษาทั่วไป', 'การตรวจเช็คยางรถยนต์']);
+    }, []);
+
 
     useEffect(() => {
         if (map && clickedLocation) {
@@ -258,16 +267,6 @@ const LocationBooking = (): JSX.Element => {
         return distance <= radiusKm * 1000;
     };
 
-    const handleRadiusInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(event.target.value);
-        if (!isNaN(value)) {
-            setCircleRadiusKm(value);
-            if (selectedPlace) {
-                updateCircle(new window.google.maps.LatLng(selectedPlace.lat, selectedPlace.lng), value * 1000);
-            }
-        }
-    };
-
     const handleBookingClick = (location: any) => {
         setBookingLocation(location.LocationName); // Store booking location name
         setBookingModalOpen(true); // Open booking modal
@@ -315,6 +314,35 @@ const LocationBooking = (): JSX.Element => {
         // Compare the selected date with the current date and time
         return date >= minTime && date <= maxTime;
     };
+
+    const handleRadiusInputChange = (event) => {
+        const value = parseInt(event.target.value, 10);
+        if (!isNaN(value) && value >= 1 && value <= 50) {
+            setCircleRadiusKm(value);
+        }
+    };
+
+    const handleRadiusTextInputChange = (event) => {
+        const value = event.target.value;
+        if (/^\d*$/.test(value)) { // Only allow numeric input
+            const numericValue = parseInt(value, 10);
+            if (!isNaN(numericValue)) {
+                setCircleRadiusKm(numericValue);
+            } else if (value === '') {
+                setCircleRadiusKm(''); // Allow empty input
+            }
+        }
+    };
+
+    const handleServiceCheckboxChange = (service) => {
+        if (selectedServices.includes(service)) {
+            setSelectedServices(selectedServices.filter((s) => s !== service));
+        } else {
+            setSelectedServices([...selectedServices, service]);
+        }
+    };
+
+
 
     return (
         <div>
@@ -365,36 +393,24 @@ const LocationBooking = (): JSX.Element => {
                 </button>
             </div>
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                <label htmlFor="radius-input" className="mr-2">Circle Radius (km):</label>
+                <label htmlFor="radius-input" className="mr-2">Distance (km):</label>
                 <input
                     id="radius-input"
                     type="range"
                     value={circleRadiusKm}
                     onChange={handleRadiusInputChange}
-                    min="1"
-                    max="50" // Adjust the max value as needed
+                    min="0"
+                    max="50"
                     step="1"
-                    className="slider appearance-none w-80 bg-gray-200 h-1 rounded outline-none focus:outline-none focus:bg-gray-300 transition-all duration-300 ease-in-out"
+                    className="slider appearance-none w-[30%] bg-gray-200 h-1 rounded outline-none focus:outline-none focus:bg-gray-300 transition-all duration-300 ease-in-out"
                 />
-                <span className="ml-2">{circleRadiusKm} km</span>
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                <label htmlFor="radius-input" style={{ marginRight: '10px' }}>Circle Radius (km):</label>
                 <input
-                    id="radius-input"
-                    type="number"
+                    type="text"
                     value={circleRadiusKm}
-                    onChange={handleRadiusInputChange}
-                    min="1"
-                    step="1"
-                    style={{
-                        padding: '10px',
-                        fontSize: '16px',
-                        width: '80px',
-                        border: '1px solid #ccc',
-                        borderRadius: '5px'
-                    }}
+                    onChange={handleRadiusTextInputChange}
+                    className="ml-2 border rounded p-1 w-10 text-center"
                 />
+                <span className="ml-2">km</span>
             </div>
             <div className="flex justify-center">
                 <div>
@@ -413,6 +429,7 @@ const LocationBooking = (): JSX.Element => {
                             }}
                             onClick={() => handleLocationBoxClick(location)}
                         >
+                            <p style={{ color: '#84cc16', fontSize: 'small', margin: 0 }}>available</p>
                             <h3>{location.LocationName}</h3>
                             <p>{location.AddressLine1}, {location.AddressLine2}</p>
                             <p>{location.City}, {location.StateProvince} {location.PostalCode}</p>
@@ -479,7 +496,7 @@ const LocationBooking = (): JSX.Element => {
                         <div className="modal-content flex flex-col items-center">
                             <DatePicker
                                 selected={bookingDate}
-                                onChange={(date: Date | null) => setBookingDate(date)}
+                                onChange={(date) => setBookingDate(date)}
                                 showTimeSelect
                                 timeIntervals={60}
                                 dateFormat="MMMM d, yyyy h:mm aa"
@@ -488,7 +505,33 @@ const LocationBooking = (): JSX.Element => {
                                 minTime={new Date().setHours(8, 0, 0)} // Set minimum time to 8:00 AM
                                 maxTime={new Date().setHours(17, 0, 0)} // Set maximum time to 5:00 PM (17:00)
                             />
-                            
+
+                            <button
+                                type="button"
+                                className="relative flex items-center text-gray-700 rounded-lg focus:outline-none hover:text-gray-900"
+                                onClick={() => setIsExtended(!isExtended)}
+                            >
+                                <div className="flex flex-col items-center">
+                                    <span>{isExtended ? 'Hide Services  ' : 'Show Services  '}</span>
+                                    <span className="mb-1 font-thin text-2xl">{isExtended ? '˄' : '˅'}</span>
+                                </div>
+                            </button>
+                            {isExtended && (
+                                <div className="w-full mb-4">
+                                    {/* Map over locationsData.Services or use a static list */}
+                                    {['การบำรุงรักษาทั่วไป', 'การตรวจเช็คระบบเบรก', 'การตรวจเช็คยางรถยนต์', 'การบำรุงรักษาเครื่องยนต์'].map((service) => (
+                                        <label key={service} className="flex items-center mb-2">
+                                            <input
+                                                type="checkbox"
+                                                className="mr-2"
+                                                checked={selectedServices.includes(service)}
+                                                onChange={() => handleServiceCheckboxChange(service)}
+                                            />
+                                            {service}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex justify-center">
@@ -510,6 +553,8 @@ const LocationBooking = (): JSX.Element => {
                     </div>
                 </div>
             )}
+
+
 
         </div>
 
