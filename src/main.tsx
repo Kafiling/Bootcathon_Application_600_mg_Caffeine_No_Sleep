@@ -3,10 +3,15 @@ import ReactDOM from "react-dom";
 import App from "./routes/App";
 import ServiceAtHome from "./routes/ServiceAtHome";
 
+import MobilLocations from "./routes/MobilLocations";
+import FindNearest from "./routes/FindNearest";
+
+
 import BookingService from "./routes/BookingService";
 import LocationBooking from "./routes/LocationBooking";
 
 import ServiceAtHomeConfirm from "./routes/ServiceAtHomeConfirm";
+
 
 import {
   createBrowserRouter,
@@ -23,6 +28,15 @@ const router = createBrowserRouter([
     element: <ServiceAtHome/>,
   },
   {
+
+    path: "/locations",
+    element: <MobilLocations/>,
+  },
+  {
+    path: "/findnearest",
+    element: <FindNearest/>,
+  },
+
     path: "/Booking-service",
     element: <BookingService/>,
   },
@@ -34,6 +48,7 @@ const router = createBrowserRouter([
     path: "/at-home-confirm",
     element: <ServiceAtHomeConfirm/>,
   },
+
 ]);
 
 ReactDOM.render(
