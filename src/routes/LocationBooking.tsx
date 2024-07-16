@@ -1,3 +1,4 @@
+// @ts-expect-error
 import React, { useEffect, useState, useRef } from 'react';
 import locationsData from './location.json'; // Import locations.json
 import swal from 'sweetalert';

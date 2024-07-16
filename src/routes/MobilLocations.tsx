@@ -1,3 +1,4 @@
+// @ts-expect-error
 import React, {FunctionComponent, useState, useRef} from 'react'
 import GoogleMapReact from 'google-map-react';
 import { useNavigate } from "react-router-dom";
