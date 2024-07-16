@@ -52,7 +52,7 @@ export const BookingService = (): JSX.Element => {
                                 </div>
                             </div>
                             <div className="absolute w-full h-[500px] top-12 left-0">
-                                <div className="absolute w-full h-[500px] top-0 left-0 bg-white" />
+                                <div className="absolute w-full h-[560px] top-0 left-0 bg-white" />
                                 <div className="absolute w-[90%] max-w-[379px] h-[587px] top-[0px] left-1/2 transform -translate-x-1/2">
                                     <div className="absolute w-full h-[368px] top-4 left-0 grid grid-cols-2 gap-4">
                                         <div
