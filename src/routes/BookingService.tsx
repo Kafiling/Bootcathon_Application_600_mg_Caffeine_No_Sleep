@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const BookingService = (): JSX.Element => {
     const redImage = "https://cdn.discordapp.com/attachments/1257716666293555201/1261645363157401649/redbmw.png?ex=6693b64e&is=669264ce&hm=0d530e2cdcb995b0c5e7e0ce50233efe2c067876238c2ac8c2ecad174c452c4f&";
@@ -28,7 +29,7 @@ export const BookingService = (): JSX.Element => {
             <header>
                 <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
                     <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-                        <a href="" className="flex items-center">
+                        <a href="/" className="flex items-center">
                             <img src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/technician_invert.png" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
                             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Booking Service</span>
                         </a>
@@ -111,13 +112,15 @@ export const BookingService = (): JSX.Element => {
                                             </div>
                                         </div>
                                     </div>
-                                    <img
-                                        className="absolute top-[460px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[270px] h-[13%] object-cover rounded-[10px]"
-                                        alt="Appointments"
-                                        src={currentImage}
-                                        onClick={toggleImage}
-                                        style={{ cursor: 'pointer' }}
-                                    />
+                                    <Link to="/Booking-service/Location-Booking">
+                                        <img
+                                            className="absolute top-[460px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[270px] h-[13%] object-cover rounded-[10px]"
+                                            alt="Appointments"
+                                            src={currentImage}
+                                            onClick={toggleImage}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </Link>
                                     <div className="text-red tracking-[0] top-[505px] leading-[normal] text-center text-xs absolute bottom-1.5 left-0 right-0">
                                         โปรดเลือกบริการเพื่อจอง
                                     </div>
