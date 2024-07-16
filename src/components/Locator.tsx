@@ -28,7 +28,7 @@ function deg2rad(deg: number): number {
 function findClosestLocations(): Location[] {
     const sortedLocations = locations.Locations.sort((a, b) => {
         const distanceA = calculateDistance(defaultLocation.latitude, defaultLocation.longitude, a.Latitude, a.Longitude);
-        const distanceB = calculateDistance(defaultLocation.latitude, defaultLocation.longitude, b.Latitude, a.Longitude);
+        const distanceB = calculateDistance(defaultLocation.latitude, defaultLocation.longitude, b.Latitude, b.Longitude);
         return distanceA - distanceB;
     });
 

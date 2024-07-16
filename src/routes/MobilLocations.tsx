@@ -21,7 +21,7 @@ function MobilLocations() {
         },
         zoom: 8
       };
-    
+    ;
     type AnyReactComponentProps = {
     lat: number | undefined;
     lng: number | undefined;
@@ -40,6 +40,7 @@ function MobilLocations() {
               const { latitude, longitude } = position.coords;
               // update the value of userlocation variable
               setUserLocation({ latitude, longitude });
+              
             },
             // if there was an error getting the users location
             (error) => {
@@ -56,7 +57,7 @@ function MobilLocations() {
       };
     
       // Get formatted address, city, state, country from latitude & longitude.
-    
+      
       //set interval to get user location
       const getAddress = () =>{
        if (userLocation) {
@@ -93,11 +94,10 @@ function MobilLocations() {
           const center = map.getCenter()
           let lat = center.lat(); 
           let lag = center.lng();
-          console.log(lat);
           setUserLocation({ latitude: lat, longitude: lag });
           
         }, 2000);
-        console.log(mobillocations.Locations[0].Latitude);
+        
       };
       
       
@@ -130,14 +130,22 @@ function MobilLocations() {
                     defaultCenter={userLocation ? { lat: userLocation.latitude, lng: userLocation.longitude } : { lat: defaultProps.center.lat, lng: defaultProps.center.lng }}
                     defaultZoom={defaultProps.zoom}
                     onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+                    
                 >
                     {mobillocations.Locations.map(item => {
                         return (
+ 
                         <div lat={item.Latitude} lng={item.Longitude}>
                             <img className='h-6' src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/location-pin.png" alt="pin" />
                         </div>
+
+                        
                         );
                     })}
+
+                    <div lat={defaultProps.center.lat} lng={defaultProps.center.lng}>
+                            <img className='h-6' src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/map.png" alt="currentpin" />
+                    </div>
     
                 </GoogleMapReact>
                 </div>      

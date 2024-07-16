@@ -59,6 +59,9 @@ function FindNearest() {
                         <div className="mt-4 mb-4 text-sm">
                           {location.AddressLine1} {location.AddressLine2} {location.City} {location.StateProvince} {location.PostalCode}
                         </div>
+                        <div className="mt-4 mb-4 text-sm">
+                          Latitude: {location.Latitude} , Longitude: {location.Longitude}
+                        </div>
                         <div className="mt-2 mb-4 text-sm">
                           Opened : {location.WeeklyOperatingDays}
                         </div>
