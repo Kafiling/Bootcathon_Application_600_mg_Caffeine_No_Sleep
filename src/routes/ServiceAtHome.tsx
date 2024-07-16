@@ -124,7 +124,7 @@ function ServiceAtHome() {
     {/*TODO : Add Google Map API Key to .env file */}
       <GoogleMapReact
         yesIWantToUseGoogleMapApiInternals = {true}
-        bootstrapURLKeys={{ key: "" }}
+        bootstrapURLKeys={{ key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY }}
         defaultCenter={userLocation ? { lat: userLocation.latitude, lng: userLocation.longitude } : { lat: 13.736717, lng: 100.523186 }}
         defaultZoom={defaultProps.zoom}
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
@@ -219,11 +219,11 @@ function ServiceAtHome() {
     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder=""/>
 </div>
     
-    <button onClick={() => location.replace("/at-home-confirm")}  type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center col-span-2">Submit</button>
+    
     
     </div>
     </form>
-
+    <button onClick={() => location.replace("/at-home-confirm")}  type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center col-span-2">Submit</button>
 </section>
     
 
