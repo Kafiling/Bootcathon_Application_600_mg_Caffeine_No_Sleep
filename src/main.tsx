@@ -8,7 +8,6 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import WeatherApp from "./routes/WeatherAPP";
 
 const router = createBrowserRouter([
   {

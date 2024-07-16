@@ -1,34 +1,13 @@
-import React, {FunctionComponent,useState} from 'react'
-import GoogleMapReact from 'google-map-react';
+import { useNavigate } from "react-router-dom";
 import "./output.css"
 import closestLocations from '../components/Locator';"../components/Locator";
-import {setDefaults,fromLatLng,setKey,geocode,RequestType} from "react-geocode";
-function FindNearest() {
-    const [location, setLocation] = useState(null);
-    setKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
-    
-    function currentLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(success, error);
-        } else {
-          console.log("Geolocation not supported");
-        }
-      }
-      
-      function success(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        setLocation({ latitude, longitude });
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-      }
-    
-      function error() {
-        console.log("Unable to retrieve your location");
-      }
 
-      window.onload = currentLocation;
-      
-    
+function FindNearest() {
+
+    const navigate = useNavigate();
+    function handleClick() {
+        navigate("/locations");
+    }
       return (
         <>
         <header>
@@ -50,30 +29,41 @@ function FindNearest() {
                 {closestLocations.map(location => {
                         return (
                         <>
-                        <div className="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
-                        <div className="flex items-center">
-                            <img className = "h-6" src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/profile.png" alt="Logo" />
+                        <div className="p-4 mb-4 text-black border border-blue-300 rounded-lg bg-stone-50 dark:bg-stone-50 shadow-xl" role="alert">
+                        <div className="flex items-center text-blue-800 ">
+                            <img className = "h-6" src="https://mobil-at-home.s3.ap-southeast-1.amazonaws.com/map.png" alt="Logo" />
                             <span className="sr-only">Info</span>
-                            <h3 className="text-lg font-medium ml-5">{location.DisplayName} </h3>
+                            <h3 className="text-lg font-semibold ml-5">{location.DisplayName} </h3>
                         </div>
-                        <div className="mt-4 mb-4 text-sm">
+                        
+                        <div className="mt-4 mb-4 text-sm ">
                           {location.AddressLine1} {location.AddressLine2} {location.City} {location.StateProvince} {location.PostalCode}
                         </div>
+                        
+                        <div className="mt-2 mb-4 text-sm">
+                          Telephone : {location.Telephone}
+                        </div>
+                        
                         <div className="mt-4 mb-4 text-sm">
-                          Latitude: {location.Latitude} , Longitude: {location.Longitude}
+                          Hours {location.HoursOfOperation24.map((hours, index) => (
+                                        <li key={index} style={{ display: 'inline', marginRight: '10px' }}>
+                                            {hours.day}: {hours.hours}{index !== location.HoursOfOperation24.length - 1 && ', '}
+                                        </li>
+                                    ))}
                         </div>
                         <div className="mt-2 mb-4 text-sm">
                           Opened : {location.WeeklyOperatingDays}
                         </div>
-                        <div className="mt-2 mb-4 text-sm">
-                          Telephone : {location.Telephone}
-                        </div>
+                        
                        
                         </div>
                         </>
                         );
                     })}
                   </div>
+                </div>
+                <div className="flex justify-start fixed bottom-0 w-full"> {/* Centered button */}
+                        <button type="button" className="text-white bg-red-700 font-bold rounded-full text-lg px-5 py-2.5 text-center me-2 mb-2 w-3" onClick={handleClick}>Back</button>
                 </div>
             </section>
         </>

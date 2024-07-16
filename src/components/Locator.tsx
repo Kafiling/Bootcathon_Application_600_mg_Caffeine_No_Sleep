@@ -32,7 +32,7 @@ function findClosestLocations(): Location[] {
         return distanceA - distanceB;
     });
 
-    return sortedLocations.slice(0, 5);
+    return sortedLocations.slice(0, 8);
 }
 
 // Usage
