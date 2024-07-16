@@ -1,7 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap');
+*{
+  font-family: "Mitr", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 .App {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -9,4 +15,7 @@
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+
 }
+
+
