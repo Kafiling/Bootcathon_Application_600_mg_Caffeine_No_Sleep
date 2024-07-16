@@ -62,9 +62,6 @@ function FindNearest() {
                     })}
                   </div>
                 </div>
-                <div className="flex justify-start fixed bottom-0 w-full"> {/* Centered button */}
-                        <button type="button" className="text-white bg-red-700 font-bold rounded-full text-lg px-5 py-2.5 text-center me-2 mb-2 w-3" onClick={handleClick}>Back</button>
-                </div>
             </section>
         </>
     )
